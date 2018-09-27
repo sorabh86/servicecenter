@@ -1,0 +1,6 @@
+.list-group-item.active a {
+    color: white;
+}
+th, td {
+    vertical-align: middle !important;
+}

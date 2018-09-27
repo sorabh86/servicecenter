@@ -1,0 +1,693 @@
+html,body{
+	font-family: 'PT Sans', sans-serif;
+	height:100%;
+}
+
+.navbar-toggle {
+	background: #fff;
+	height: 44px;
+}
+.navbar-toggle span.icon-bar {
+	background: #666;
+}
+
+.wrapper {
+	/*margin-top: 51px;*/
+}
+
+form[name=book-appointment] .nav-tabs > li {
+    float:none;
+    display:inline-block;
+    zoom:1;
+}
+
+form[name=book-appointment] .nav-tabs {
+    text-align:center;
+    margin-bottom: 20px;
+}
+
+/****************************** loader start ********************************/
+.loader {
+  border: 10px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 10px solid #3498db;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: spin 1s linear infinite; /* Safari */
+  animation: spin 1s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* *********************** header **************************** */
+.header-login {
+	width: 250px;
+	padding: 15px;
+	left: 100%;
+	transform: translateX(-100%);
+}
+
+/****************************** loader end ********************************/
+#loading-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+#loading-image .loader-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.1);
+}
+#loading-image .loader {
+    left: 50%;
+    top: 50%;
+    position: fixed;
+    transform: translate(-50%,-50%);
+}
+
+/*********************** navbar starts ****************************/
+.navbar	 {
+	margin: 0;
+	border-radius: 0;
+}
+.navbar.bg-red {
+	background: rgba(237, 28, 36, .8);
+}
+.navbar-brand {
+	padding: 5px 15px;
+	height: auto;
+}
+.navbar-brand img {
+	height: 50px;
+}
+
+.navbar-default {
+	background: rgba(255,255,255,0.5);
+	border: none;
+}
+.bg-black {
+	background: #000;
+	color: #fff
+}
+.navbar-nav>li>a {
+    line-height: 30px;
+    font-weight: bold;
+}
+.nav>li>a:focus,.navbar-nav>li>a:hover {
+	color: #000;
+}
+
+.navbar-default .navbar-nav>li>a {
+	color: #383737;
+}
+/******************************** navbar ends ****************************/
+
+/******************************** carousel starts *****************************/
+#home-carousal.carousel,.item,.active{height:100%;}
+#home-carousal .carousel-inner{height:100%;}
+
+#home-carousal .carousel-caption {
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: auto;
+    color: #000;
+    text-shadow: -1px -1px 1px #fff, 0px 0px 1px #fff, 1px 0px 1px #fff, 0px 1px 1px #fff;
+}
+
+#home-carousal .carousel-caption h1 {
+	font-weight: bold;
+	font-size: 3em;
+	margin-top: 0;
+	margin-bottom: 30px;
+    color: #ed1c24;
+    text-shadow: -1px -1px 1px #fff, 0px 0px 1px #fff, 1px 0px 1px #fff, 0px 1px 1px #fff; 
+}
+#home-carousal .carousel-caption p {
+	font-size: 1.6em;
+	margin-bottom: 30px;
+}
+
+#home-carousal.carousel .show-content {
+	display: block;
+	/*border-radius: 50% 50% 0 0;*/
+	/*background: rgba(0,0,0,0.5);*/
+	padding: 20px 20px 5px 20px;
+	color: #fff;
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+#home-carousal.carousel .show-content:before {
+	content: '';
+	position: absolute;
+	left:50%;
+	transform:translateX(-50%);
+	bottom:0;
+	border-bottom: 50px solid rgba(237, 28, 36, .8);;
+	border-left: 40px solid transparent;
+	border-right: 40px solid transparent;
+}
+#home-carousal.carousel:after {
+	content: '';
+	width: 100%;
+	height: 10px;
+	position: absolute;
+	bottom: 0;
+	background: rgba(237, 28, 36, .8);;
+	left: 0;
+}
+.custom-control {
+	position: absolute;
+	background: rgba(255,255,255,0.5);
+	top: 50%;
+	transform: translateY(-50%);
+	color: #888;
+	padding: 20px;
+}
+.custom-control.left {
+	left: 0;
+}
+.custom-control.right {
+	right: 0;
+}
+/************************** carousal ends *****************************/
+.bg-red {
+    background: #ed1c24;
+    color: #fff;
+}
+.bg-red a {
+	color:#fff;
+}
+
+.title {
+	position: relative;
+    font-weight: bold;
+    border-bottom: 1px solid #ed1c24;
+    padding-bottom: 25px;
+    font-size: 3em;
+    margin-top: 55px;
+    margin-bottom: 25px;
+}
+.title:after {
+	content : '';
+	position: absolute;
+	left:50%;
+	transform: translateX(-50%);
+	bottom: -10px;
+	border-top: 10px solid #ed1c24;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+}
+
+/*********************** welcome starts *****************************/
+
+.welcome {
+	text-align: center;
+}
+.welcome .title {
+	border-bottom: 1px dashed #fff;
+}
+.welcome .title:after {
+	border-top-color: #fff;
+}
+.welcome-txt {
+	font-size: 1.3em;
+	margin-top: 40px;
+	margin-bottom: 40px;
+	line-height: 2;
+}
+.welcome .btn-default {
+    margin-bottom: 50px;
+}
+/****************************** welcome ends *********************************/
+
+/*************************** choose us starts **************************************/
+.choose-us .title {
+	text-align: center;
+}
+.choose-us .panel-heading {
+	padding: 0;
+}
+.choose-us .panel-heading h3 {
+	margin: 0;
+	padding: 20px;
+	text-align: center;
+}
+.choose-us .panel-body {
+	padding: 0;
+	text-align: center;
+}
+.choose-us .panel-body p {
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
+.choose-us .panel-body .btn {
+	text-align: center;
+}
+/*************************** choose us ends **************************************/
+
+/************************** test-form start ********************************************/
+.test-form {
+	padding: 40px 0;
+}
+.testimo {
+	text-align: center;
+	color: #888;
+}
+.testimo h2 {
+	margin-top: 0;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+.testimo h3 {
+	margin-top: 0;
+	margin-bottom: 20px;
+}
+.testimo .carousel-html {
+	width:100%;
+	height:500px;
+	min-width:100%;
+	min-height:500px;
+	max-width:100px;
+	max-height:500px;
+	overflow:hidden;
+	display:block;
+	/*border:1px solid red;*/
+}
+.testimo .carousel-caption p {
+	margin-top: 25px;
+	margin-bottom: 0;
+	color: #888;
+}
+.test-form .panel {
+	margin: 0;
+	color: #222;
+}
+.test-form .panel .panel-heading {
+	text-align: center;
+	position: relative;
+	padding-bottom: 25px;
+}
+.test-form .panel .panel-heading:after {
+	content : 'OR';
+	background: #ed1c24;
+	box-shadow: 1px 1px 3px inset rgba(0,0,0,0.4);
+	position: absolute;
+	left: 50%;
+	bottom: -20px;
+	transform: translateX(-50%);
+	/*color: #000;*/
+	border-radius: 50%;
+	padding: 10px;
+	font-weight: bold;
+}
+.test-form .panel-heading h3 {
+	padding-bottom: 10px;
+	/*text-shadow: -1px -1px 1px #000;*/
+}
+.test-form .panel-heading p {
+	font-size: 1.5em;
+	/*font-weight: bold;*/
+	box-shadow: 0 0 8px inset #000;
+}
+.test-form .panel-heading p span {
+	position: relative;
+	margin-right: 10px;
+	font-size: 1em;
+}
+.test-form .panel-heading p span:after {
+	content: '';
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: 3px solid #fff;
+	position: absolute;
+	left: -9px;
+	top: -9px;
+}
+
+/************************** test-form start ********************************************/
+
+.btn-border {
+	background-color: transparent;
+    border-radius: 40px;
+    padding: 10px 40px;
+    border-style: solid;
+    border-width: 1px;
+    font-weight: bold;
+}
+.btn-border-white {
+    border-color: #fff;
+    color: #fff;
+}
+.btn-border-black {
+	border-color: #000;
+    color: #000;
+}
+.input-block {
+	width: 100%;
+}
+.btn-border-white.input-block::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: white;
+    opacity: 1; /* Firefox */
+}
+.btn-border-white.input-block:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: white;
+}
+.btn-border-white.input-block::-ms-input-placeholder { /* Microsoft Edge */
+    color: white;
+}
+
+/******************************** footer start ***************************/
+.footer {
+	border-top:2px solid #ed1c24;
+}
+/******************************** footer start ***************************/
+
+.shorcuts {
+	padding: 40px 0;	
+}
+.shorcuts h3 {
+	margin: 0;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+.shorcuts h3 small {
+	color: #f1f1f1;
+}
+.shorcuts .contact-info h3 {
+	text-align: center;
+	position: relative;
+	padding-bottom: 15px;
+	margin-bottom: 40px;
+	border-bottom: 1px solid #fff;
+}
+.shorcuts .contact-info h3:after {
+	content: '';
+	border-top: 10px solid #fff;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: -10px;
+}
+.shorcuts .contact-info ul {
+	margin: 20px;
+	letter-spacing: 1px;
+    line-height: 1.6em;
+    font-size: 1.2em;
+}
+.shorcuts .contact-info li {
+	margin-bottom: 10px;
+}
+.shorcuts .contact-info li i {
+	margin-right: 20px;
+}
+
+.shorcuts .newletter h3 {
+	text-align: center;
+	position: relative;
+	padding-bottom: 15px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #fff;
+}
+.shorcuts .newletter h3:after {
+	content: '';
+	border-top: 10px solid #fff;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: -10px;
+}
+
+.copyright {
+	padding: 30px 0;
+	font-size: 1.2em;
+}
+.copyright p {
+	margin: 0;
+}
+
+/* ************* offer ****************** */
+.offer {
+	margin-bottom: 40px;
+}
+.offer-icon {
+	margin: 0 auto;
+	border: 1px solid #ed1c24;
+	padding: 20px;
+	border-radius: 20px;
+}
+.offer-icon h4 {
+	background: #ed1c24;
+	padding: 20px;
+	color: white;
+	border-radius: 10px;
+}
+
+/********************* parallax start **************************/
+.parallax-01 { 
+    /* The image used */
+	background-image: url('../img/parallax/01.jpg');
+
+    /* Set a specific height */
+    /*height: 300px; */
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+/* Turn off parallax scrolling for all tablets and phones. Increase/decrease the pixels if needed */
+@media only screen and (max-device-width: 1366px) {
+    .parallax {
+        background-attachment: scroll;
+    }
+}
+/********************* parallax end **************************/
+
+.about-us .parallax-01 {
+	position: relative;
+}
+.about-us h2.parallax {
+	/*position: absolute;*/
+	/*bottom: 20px;*/
+	/*left: 50%;*/
+	/*transform: translateX(-50%);*/
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    color: #fff;
+    border-bottom-color: #fff;
+    text-shadow: 2px -2px 2px #000;
+    position: relative;
+    top: -60px;
+    height: 0;
+}
+
+.about-us .team .title {
+	text-align: center;
+}
+
+.about-us .team .thumbnail {
+	text-align: center;
+}
+
+.about-us .team .thumbnail h4 {
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+.about-us .more-about {
+	color: #fff;
+	margin-top: 20px;
+	text-align: center;
+}
+
+.about-us .more-about .title {
+	text-align: center;
+	border-bottom-color: #fff;
+	margin-bottom: 40px;
+}
+.about-us .more-about .title:after {
+	border-top-color: #fff;
+}
+.about-us .more-about p {
+	font-size: 1.3em;
+	margin-bottom: 20px;
+	text-align: left;
+	line-height: 2em;
+}
+
+/************************** contact us ************************/
+.contact-us {
+	margin-top: 40px;
+}
+.contact-us .title {
+	text-align: center;
+	margin-bottom: 50px;
+}
+.contact-us .panel {
+	border-radius: 30px;
+	margin-bottom: 40px;
+}
+.contact-us .panel .panel-heading {
+	border-radius: 30px 30px 0 0;
+	margin-bottom: 20px;
+}
+.contact-us .panel .panel-body {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.contact-us .panel h3 {
+	text-align: center;
+}
+.contact-us .panel input {
+	border-radius: 30px;
+	padding: 15px;
+	height: auto;
+	box-shadow: none;
+}
+.contact-us .panel textarea {
+	border-radius: 10px;
+	padding: 15px;
+	height: auto;
+	box-shadow: none;
+}
+.contact-us .panel button[type=submit] {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+/************************* registation form start **********************************/
+.register {
+	 padding-top:20px;
+}
+.register .panel {
+	color : #333;
+	border-radius: 40px;
+}
+
+.register .panel .title {
+	color: #5cb85c;
+	text-align: center;
+	margin-top: 30px;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+	border-bottom-color: #5cb85c;
+}
+.register .panel .title:after {
+	border-top-color: #5cb85c;
+}
+.register .panel input, .register .panel select {
+	border-radius: 40px;
+	background: transparent;
+	box-shadow: none;
+	padding: 10px 20px;
+	height: auto;
+}
+.register .panel button[type=submit] {
+	margin-top: 20px;
+}
+.register .already-mem {
+	border-top: 1px solid #5cb85c;
+	margin-top: 30px;
+	padding: 10px;
+}
+.register .already-mem .btn {
+	margin-left: 20px;
+	min-width: 150px;
+}
+
+/************************* registation form end **********************************/
+
+.btn-border-primary {
+	border-radius: 30px;
+	background: transparent;
+	color: #337ab7;
+	border-color: #337ab7
+}
+.btn-border-success {
+	border-radius: 30px;
+	background: transparent;
+	color: #5cb85c;
+	border-color: #5cb85c
+}
+
+/************************* login form start **********************************/
+.login {
+	padding-top:80px;
+padding-bottom: 80px;
+}
+.login .panel {
+	color : #333;
+	border-radius: 40px;
+}
+
+.login .panel .title {
+	color: #5cb85c;
+	text-align: center;
+	margin-top: 30px;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+	border-bottom-color: #5cb85c;
+}
+.login .panel .title:after {
+	border-top-color: #5cb85c;
+}
+.login .panel input, .login .panel select {
+	border-radius: 40px;
+	background: transparent;
+	box-shadow: none;
+	padding: 10px 20px;
+	height: auto;
+}
+.login .panel button[type=submit] {
+	margin-top: 20px;
+}
+.login .not-mem {
+	border-top: 1px solid #5cb85c;
+	margin-top: 30px;
+	padding: 10px;
+}
+.login .not-mem .btn {
+	margin-left: 20px;
+	min-width: 150px;
+}
+/************************* login form ends **********************************/
+
+.btn-back {
+	margin-top:20px;
+}
+
+/* ***************** dashboard ******************** */
+.dashboard .list-group {
+	margin-bottom: 40px;
+}
+.dashboard .list-group a {
+	text-align: center;
+	display: block;
+	border: 2px solid;
+	padding: 30px;
+}
+.dashboard .list-group .glyphicon {
+	font-size: 100px;
+}
