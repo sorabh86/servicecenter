@@ -22,7 +22,7 @@
 							<td><?= $engineer->address ?></td>
 							<td><?= $engineer->date_of_joining ?></td>
 							<td><?= $engineer->expertise ?></td>
-							<td><a href="">edit</a> | <a href="">delete</a></td>
+							<td><a href="<?= SC_URL ?>admin/editengineer?id=<?= $engineer->id ?>">edit</a> | <a class="btn-delete" href="<?= SC_URL ?>admin/deleteengineer">delete</a></td>
 						</tr>
 					<?php endforeach; 
 					else : ?>

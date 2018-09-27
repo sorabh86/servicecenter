@@ -11,6 +11,20 @@
                 return false;
             }
         });
+        
+        $(document['engineer-form']).on('submit', function(e){
+            var $form = $(e.currentTarget),
+                len = $form.find('input[name="expertise[]"]:checked').length;
+            
+            if(len>0) return true;
+            else {
+                $form.find('.skill-notice').removeClass('hide');
+                setTimeout(function() {
+                    $form.find('.skill-notice').addClass('hide');
+                }, 2000);
+                return false;
+            }
+        });
     }
 
     $(document).ready(initListener);

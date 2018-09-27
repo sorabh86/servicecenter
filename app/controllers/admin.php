@@ -241,18 +241,28 @@ class Admin extends Controller {
      * Manage engineers
      */
     public function manageengineer() {
+        $engModel = $this->model('EngineerModel');
+        $engineers = $engModel->get_engineers();
+
         $this->view('admin/layout/header');
         $this->view('admin/layout/sidelink', array(
             "mengineers" => true
         ));
-        $this->view('admin/manageengineer');
+        $this->view('admin/manageengineer', array(
+            'engineers' => $engineers
+        ));
         $this->view('admin/layout/footer');
     }
     public function addengineer() {
-        if($_POST['submit']) {
-            echo '<pre>';
-            print_r($_POST);
-            echo '</pre>';
+        if(isset($_POST['submit'])) {
+            $engModel = $this->model('EngineerModel');
+            $engineer = $engModel->insert_engineer($_POST);
+
+            foreach($_POST['expertise'] as $cat_id) {
+                $engModel->insert_expertise($engineer->id, $cat_id);
+            }
+            
+            $this->redirect('admin/manageengineer');
             exit();
         }
 
@@ -264,6 +274,31 @@ class Admin extends Controller {
             'cat' => $cat
         ));
         $this->view('admin/layout/footer');
+    }
+    public function editengineer() {
+        if(!isset($_GET['id']))
+            $this->redirect('admin/manageengineer');
+        
+        $engModel = $this->model('EngineerModel');
+        $engineer = $engModel->get_by_id($_GET['id']);
+
+        if(isset($_POST['submit'])) {
+            $status = $engModel->update_engineer($_POST);
+
+            if($status->error) {
+                echo $status->message;
+                exit();
+            }
+            $this->redirect('admin/manageengineer');
+            exit();
+        }
+
+        $this->view('admin/layout/header');
+        $this->view('admin/editEngineer', array('engineer'=>$engineer));
+        $this->view('admin/layout/footer');
+    }
+    public function deleteengineer() {
+
     }
 
     /**
