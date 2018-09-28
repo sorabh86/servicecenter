@@ -194,5 +194,18 @@
             $('li.dropdown.login-dropdown').removeClass('open');
         }
     });
+
+    $('#alt-address').on('change', function(e){
+        if($(this).prop('checked')) {
+            $('#alt-address-box').addClass('hide');
+            console.log('is checked');
+        } else {
+            $('#alt-address-box').removeClass('hide');
+            console.log('is not checked');
+            
+        }
+        console.log('checked called');
+            
+    });
 })(jQuery);
 

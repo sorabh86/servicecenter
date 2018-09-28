@@ -3,7 +3,7 @@
 
 class ProductModel {
     protected $db;
-    
+
     function __construct($db) {
         $this->db = $db;
     }
@@ -15,10 +15,6 @@ class ProductModel {
                 INNER JOIN product_category PD ON P.product_category_id=PD.id');
             $stmt->execute();
             return $stmt->fetchAll();
-            return (object)array(
-                'error' => false,
-                'message' => 'success' 
-            );
         } catch (PDOException $e) {
             return (object)array(
                 'error' => true,
