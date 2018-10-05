@@ -1,7 +1,7 @@
 <div class="container" style="margin-bottom:40px">
     <a class="btn btn-default btn-back" href="<?= SC_URL ?>customer">back</a>
     <h1 class="page-header">Devices <a class="btn btn-primary pull-right" href="<?= SC_URL ?>customer/adddevice">Add</a></h1>
-    
+    <p>In order to provide different services, we request some basic information about your device, it will help you in future to send any type of service request in future.</p>
     <table class="table table-hover">
         <thead>
             <tr>
@@ -15,17 +15,17 @@
             </tr>
         </thead>
         <tbody>
-            <?php if(isset($data['products']) && count($data['products'])>0) : 
-                foreach($data['products'] as $product) : ?>
+            <?php if(isset($data['devices']) && count($data['devices'])>0) : 
+                foreach($data['devices'] as $device) : ?>
                 <tr>
-                    <td><?= $product->id ?></td>
-                    <td><?= $product->product_category_name ?></td>
-                    <td><?= $product->brand_name ?></td>
-                    <td><?= $product->serial_no ?></td>
-                    <td><?= $product->purchase_price ?></td>
-                    <td><?= $product->date_of_purchase ?></td>
+                    <td><?= $device->id ?></td>
+                    <td><?= $device->device_category_name ?></td>
+                    <td><?= $device->brand_name ?></td>
+                    <td><?= $device->serial_no ?></td>
+                    <td><?= $device->purchase_price ?></td>
+                    <td><?= $device->date_of_purchase ?></td>
                     <td>
-                        <a class="btn btn-success" href="<?= SC_URL ?>customer/editdevice?id=<?= $product->id ?>">edit</a></td>
+                        <a class="btn btn-success" href="<?= SC_URL ?>customer/editdevice?id=<?= $device->id ?>">edit</a></td>
                 </tr>
             <?php endforeach; 
             else: ?>

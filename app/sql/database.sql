@@ -8,11 +8,11 @@ CREATE TABLE IF NOT EXISTS customers (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS products ( 
+CREATE TABLE IF NOT EXISTS devices ( 
     id int(8) NOT NULL AUTO_INCREMENT, 
     customer_id  int(8) NOT NULL, 
     engineer_id  int(8) NOT NULL, 
-    product_category_id  int(8) NOT NULL, 
+    device_category_id  int(8) NOT NULL, 
     brand_name VARCHAR(255) NOT NULL, 
     serial_no VARCHAR(255) NOT NULL, 
     purchase_price DECIMAL(8,2) NOT NULL, 
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS products (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS product_category ( 
+CREATE TABLE IF NOT EXISTS device_category ( 
     id int(8) NOT NULL AUTO_INCREMENT, 
     name VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS product_category (
 
 CREATE TABLE IF NOT EXISTS fault_services ( 
     id int(8) NOT NULL AUTO_INCREMENT, 
-    product_id int(8) NOT NULL, 
+    device_id int(8) NOT NULL, 
     alternative_address VARCHAR(255) NOT NULL, 
     alternative_phone VARCHAR(50) NOT NULL, 
     status VARCHAR(255) NOT NULL, 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS engineers (
 );
 
 CREATE TABLE IF NOT EXISTS engineers_expertise ( 
-    product_category_id int(8) NOT NULL, 
+    device_category_id int(8) NOT NULL, 
     engineer_id int(8) NOT NULL 
 );
 

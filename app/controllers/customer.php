@@ -98,19 +98,19 @@ class Customer extends Controller {
      */
     public function devices() {
         $customer_id = $_SESSION['user']->id;
-        $prodModel = $this->model('ProductModel');
-        $products = $prodModel->get_by_customer_id($customer_id);
+        $devModel = $this->model('DeviceModel');
+        $devices = $devModel->get_by_customer_id($customer_id);
 
         $this->view("layouts/header");
         $this->view("customer/devices",array(
-            'products' => $products
+            'devices' => $devices
         ));
         $this->view("layouts/footer");
     }
     public function adddevice() {
         if(isset($_POST['submit'])) {
-            $prodModel = $this->model('ProductModel');
-            $prodModel->insert_product($_POST);
+            $devModel = $this->model('DeviceModel');
+            $devModel->insert_device($_POST);
             $this->redirect('customer/devices');
             exit();
         }
@@ -130,11 +130,11 @@ class Customer extends Controller {
         if(!isset($_GET['id']))
             $this->redirect('customer/devices');
 
-        $prodModel = $this->model('ProductModel');
-        $product = $prodModel->get_by_id($_GET['id']); 
+        $devModel = $this->model('DeviceModel');
+        $device = $devModel->get_by_id($_GET['id']); 
 
         if(isset($_POST['submit'])) {
-            $status = $prodModel->update_product($_POST);
+            $status = $devModel->update_device($_POST);
             $this->redirect('customer/devices');
             exit();
         }
@@ -145,7 +145,7 @@ class Customer extends Controller {
 
         $this->view("layouts/header");
         $this->view("customer/editdevice", array(
-            'product' => $product,
+            'device' => $device,
             'customer_id' => $customer_id,
             'categories' => $categories
         ));
@@ -156,29 +156,32 @@ class Customer extends Controller {
      * Manage customer fault Service Request
      */
     public function faultservice() {
-        $faultModel = $this->model('FaultModel');
-        $faults = $faultModel->get_faults();
-
+        if(!isset($_SESSION['user']))
+            $this->redirect('customer/login');
+        
+        $serviceModel = $this->model('ServiceModel');
+        $services = $serviceModel->get_by_customer_id('fault_repair',$_SESSION['user']->id);
+        
         $this->view("layouts/header");
         $this->view("customer/faultservice",array(
-            'faults' => $faults
+            'services' => $services
         ));
         $this->view("layouts/footer");
     }
     public function addfault() {
         if(isset($_POST['submit'])) {
-            $faultModel = $this->model('FaultModel');
-            $status = $faultModel->request_fault($_POST);
-            echo $status->message;
-            exit();
+            $serviceModel = $this->model('ServiceModel');
+            $status = $serviceModel->request_service($_POST);
+            // echo $status->message;
+            $this->redirect('customer/faultservice');
         }
 
-        $prodModel = $this->model('ProductModel');
-        $products = $prodModel->get_products();
+        $devModel = $this->model('DeviceModel');
+        $devices = $devModel->get_by_customer_id($_SESSION['user']->id);
 
         $this->view("layouts/header");
         $this->view("customer/addfault",array(
-            'products' => $products
+            'devices' => $devices
         ));
         $this->view("layouts/footer");
     }
@@ -187,8 +190,33 @@ class Customer extends Controller {
      * Manage customer maintenance services
      */
     public function maintenance() {
+        if(!isset($_SESSION['user']))
+            $this->redirect('customer/login');
+        
+        $serviceModel = $this->model('ServiceModel');
+        $services = $serviceModel->get_by_customer_id('maintenance', $_SESSION['user']->id);
+
         $this->view("layouts/header");
-        $this->view("customer/maintenance");
+        $this->view("customer/maintenance", array(
+            'services' => $services
+        ));
+        $this->view("layouts/footer");
+    }
+
+    public function addmaintenance() {
+        if(isset($_POST['submit'])) {
+            $serviceModel = $this->model('ServiceModel');
+            $status = $serviceModel->request_service($_POST);
+            // echo $status->message;
+            $this->redirect('customer/maintenance');
+        }
+        $devModel = $this->model('DeviceModel');
+        $devices = $devModel->get_by_customer_id($_SESSION['user']->id);
+
+        $this->view("layouts/header");
+        $this->view("customer/addmaintenance", array(
+            'devices' => $devices
+        ));
         $this->view("layouts/footer");
     }
 }

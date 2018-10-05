@@ -1,5 +1,5 @@
 <div class="container" style="margin-bottom:40px">
-    <h1 class="page-header">Request Fault</h1>
+    <h1 class="page-header">Add Fault Request</h1>
     <form action="" method="POST" role="form">
         <input type="hidden" name="type" value="fault_repair">
         <div class="form-group">
@@ -7,7 +7,7 @@
             <?php if(isset($data['devices'])) : ?>
                 <select class="form-control" name="device_id">
                     <?php foreach($data['devices'] as $device): ?>
-                        <option value="<?= $device->id ?>"><?= $device->device_category_name.' : '.$device->brand_name.' '.$device->serial_no ?></option>
+                        <option value="<?= $device->id ?>"><?= $device->customer_name.'; '.$device->device_category_name.' : '.$device->brand_name.' '.$device->serial_no ?></option>
                     <?php endforeach; ?>
                 </select>
             <?php else : ?>
@@ -42,6 +42,6 @@
         </div>
         
         <button name="submit" type="submit" class="btn btn-primary">Add</button>
-        <a href="<?= SC_URL ?>customer/faultservice" class="btn btn-default">cancel</a>
+        <a href="<?= SC_URL ?>admin/managefault" class="btn btn-default">cancel</a>
     </form>
 </div>

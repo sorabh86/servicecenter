@@ -6,7 +6,7 @@
 					Categories 
 					<span class="badge"></span>
 				</a>
-				<a class="list-group-item <?php echo ($data['mproduct'])?'active':'' ?>" href="<?= SC_URL ?>admin/manageproduct">
+				<a class="list-group-item <?php echo ($data['mdevice'])?'active':'' ?>" href="<?= SC_URL ?>admin/managedevice">
 					Devices 
 					<span class="badge"></span>
 				</a>
@@ -23,7 +23,7 @@
 					Fault Request 
 				</a>
 				<a class="list-group-item <?php echo ($data['mmaintain'])?'active':'' ?>" href="<?= SC_URL ?>admin/managemaintain">
-					Maintenance Service 
+					Services 
 				</a>
 				</li>
 			</ul>

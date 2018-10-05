@@ -1,5 +1,5 @@
         <div class="col-md-10">
-            <h2 class="page-header">Basic Information</h2>
+            <h2 class="page-header">Basic Information <a href="<?= SC_URL ?>admin/editcustomer?id=<?= $_GET['id'] ?>" class="btn btn-success pull-right" >Edit</a></h2>
             <?php if(isset($data['customer'])) : ?>
                 <p><strong>Full Name :</strong> <?= $data['customer']->name ?></p>
                 <p><strong>Username :</strong> <?= $data['customer']->username ?> </p>
@@ -12,8 +12,72 @@
             <?php endif; ?>
 
             <h4 class="page-header">Customer Devices</h4>
-            <?php if(isset($data['products'])) :
-                if(count($data['products']) > 0) : ?>
+            <?php if(isset($data['devices']) && !empty($data['devices'])) :?>
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Product Category</th>
+                            <th>Brand Name</th>
+                            <th>Serial No</th>
+                            <th>Purchase Price</th>
+                            <th>Purchase Date</th>
+                            <th>options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($data['devices'] as $device) : ?>
+                        <tr>
+                            <td><?= $device->id ?></td>
+                            <td><?= $device->device_category_name.' ('.$device->device_category_id.')' ?></td>
+                            <td><?= $device->brand_name ?></td>
+                            <td><?= $device->serial_no ?></td>
+                            <td><?= $device->purchase_price ?></td>
+                            <td><?= $device->date_of_purchase ?></td>
+                            <td><a href="<?= SC_URL ?>admin/editdevice?id=<?= $device->id ?>" class="btn btn-success">Edit</a>
+                                <a href="<?= SC_URL ?>admin/deletedevice?id=<?= $device->id ?>" class="btn btn-delete btn-danger">Delete</a></td>
+                        </tr> 
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div class="alert alert-info">
+                    No added device found for this customer.
+                </div>
+            <?php endif; ?>
+
+            <h4 class="page-header">Customer Fault Request</h4>
+            <?php if(isset($data['faults']) && !empty($data['faults'])) : ?>
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Status</th>
+                            <th>Date of Request</th>
+                            <th>options</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($data['faults'] as $fault) : ?>
+                        <tr>
+                            <td><?= $fault->id ?></td>
+                            <td><?= $fault->device_name ?> (<a href="<?= SC_URL ?>admin/editdevice?id=<?= $fault->id ?>"><?= $fault->id ?></a>)</td>
+                            <td><?= $fault->status ?></td>
+                            <td><?= $fault->requested_date ?></td>
+                            <td><a href="<?= SC_URL ?>admin/viewfault?id=<?= $fault->id ?>">view</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div class="alert alert-info">
+                    No fault service found for this customer.
+                </div>
+            <?php endif;  ?>
+            
+            <h4 class="page-header">Customer Maintenance Services</h4>
+            <?php if(isset($data['maintenances']) && !empty($data['maintenances'])) : ?>
                 <table class="table table-responsive">
                     <thead>
                         <tr>
@@ -28,31 +92,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($data['products'] as $product) : ?>
+                    <?php foreach($data['devices'] as $device) : ?>
                         <tr>
-                            <td><?= $product->id ?></td>
-                            <td><?= $product->customer_name.' ('.$product->customer_id.')' ?></td>
-                            <td><?= $product->product_category_name.' ('.$product->product_category_id.')' ?></td>
-                            <td><?= $product->brand_name ?></td>
-                            <td><?= $product->serial_no ?></td>
-                            <td><?= $product->purchase_price ?></td>
-                            <td><?= $product->date_of_purchase ?></td>
-                            <td><a href="<?= SC_URL ?>admin/editproduct?id=<?= $product->id ?>" class="btn btn-success">Edit</a>
-                                <a href="<?= SC_URL ?>admin/deleteproduct?id=<?= $product->id ?>" class="btn btn-delete btn-danger">Delete</a></td>
+                            <td><?= $device->id ?></td>
+                            <td><?= $device->customer_name.' ('.$device->customer_id.')' ?></td>
+                            <td><?= $device->device_category_name.' ('.$device->device_category_id.')' ?></td>
+                            <td><?= $device->brand_name ?></td>
+                            <td><?= $device->serial_no ?></td>
+                            <td><?= $device->purchase_price ?></td>
+                            <td><?= $device->date_of_purchase ?></td>
+                            <td><a href="<?= SC_URL ?>admin/editdevice?id=<?= $device->id ?>" class="btn btn-success">Edit</a>
+                                <a href="<?= SC_URL ?>admin/deletedevice?id=<?= $device->id ?>" class="btn btn-delete btn-danger">Delete</a></td>
                         </tr> 
                     <?php endforeach; ?>
                     </tbody>
                 </table>
             <?php else: ?>
                 <div class="alert alert-info">
-                    No added device/product found for this customer.
+                    No maintenances subscription found for this customer.
                 </div>
-            <?php endif; 
-            endif; ?>
-
-            <h4 class="page-header">Customer Fault Request</h4>
-            
-            <h4 class="page-header">Customer Maintenance Services</h4>
+            <?php endif; ?>
         </div>
     </div>
 </div>

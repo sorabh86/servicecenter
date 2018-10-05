@@ -16,13 +16,13 @@
         <div class="form-group">
             <label class="control-label">Product Type :</label>
             <?php if(isset($data['cat'])) : ?>
-                <select name="product_category_id" class="form-control" required>
+                <select name="device_category_id" class="form-control" required>
                     <?php foreach($data['cat'] as $category) : ?>
                         <option value="<?= $category->id ?>"><?= $category->name ?></option>
                     <?php endforeach; ?>
                 </select>
             <?php else : ?>
-                <p class="alert alert-info">You didn't add any product categories in admin area</p>
+                <p class="alert alert-info">You didn't add any device categories in admin area</p>
             <?php endif; ?>
         </div>
         <div class="form-group">
@@ -44,7 +44,7 @@
         
         <div class="form-group">
             <button name="submit" class="btn btn-success" type="submit">ADD</button>
-            <a href="<?= SC_URL ?>admin/manageproduct" class="btn btn-default">Cancel</a>
+            <a href="<?= SC_URL ?>admin/managedevice" class="btn btn-default">Cancel</a>
         </div>
     </form>
 </div>

@@ -9,7 +9,8 @@ class CustomerModel {
     }
 
     public function customer_exist($username) {
-        $stmt = $this->db->query("SELECT id FROM customers");
+        $stmt = $this->db->prepare("SELECT id FROM customers WHERE username=?");
+        $stmt->execute(array($username));
         if($stmt->rowCount() == 0) {
             return false;
         } else {

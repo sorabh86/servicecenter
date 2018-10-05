@@ -22,7 +22,7 @@
 							<td><?= $customer->username ?></td>
 							<td><?= $customer->phone ?></td>
 							<td><?= $customer->address ?></td>
-							<td><a href="<?= SC_URL ?>admin/viewcustomer?id=<?= $customer->id ?>">view</a> | <a href="">edit</a> | <a href="">revoke</a></td>
+							<td><a href="<?= SC_URL ?>admin/viewcustomer?id=<?= $customer->id ?>">view</a></td>
 						</tr>
 					<?php endforeach; 
 					else : ?>

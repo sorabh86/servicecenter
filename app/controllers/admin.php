@@ -96,32 +96,32 @@ class Admin extends Controller {
     }
 
     /**
-     * Manage devices or product added by customer or added by admin
+     * Manage devices or device added by customer or added by admin
      */
-    public function manageproduct() {
-        $prodModel = $this->model('ProductModel');
-        $products = $prodModel->get_products();
+    public function managedevice() {
+        $prodModel = $this->model('DeviceModel');
+        $devices = $prodModel->get_devices();
 
         $this->view('admin/layout/header');
         $this->view('admin/layout/sidelink', array(
-            "mproduct" => true
+            "mdevice" => true
         ));
-        $this->view('admin/manageproduct', array(
-            'products' => $products
+        $this->view('admin/managedevice', array(
+            'devices' => $devices
         ));
         $this->view('admin/layout/footer');
     }
-    public function addproduct() {
+    public function adddevice() {
         $post = $_POST;
         if(isset($post['submit'])) {
-            $prodModel = $this->model('ProductModel');
+            $prodModel = $this->model('DeviceModel');
 
-            $status =$prodModel->insert_product($post); 
+            $status =$prodModel->insert_device($post); 
             if($status->error) {
                 echo '<br> fail'.$status->message;
             } else {
                 echo '<br> success';
-                $this->redirect('admin/manageproduct');
+                $this->redirect('admin/managedevice');
                 exit();
             }
         }
@@ -132,26 +132,26 @@ class Admin extends Controller {
         $customers = $custModel->get_customers();
 
         $this->view('admin/layout/header');
-        $this->view('admin/addproduct', array(
+        $this->view('admin/adddevice', array(
             'customers' => $customers,
             'cat' => $categories
         ));
         $this->view('admin/layout/footer');
     }
-    public function editproduct() {
+    public function editdevice() {
         if(!isset($_GET['id']))
-            $this->redirect('admin/manageproduct');
+            $this->redirect('admin/managedevice');
 
-        $prodModel = $this->model('ProductModel');
-        $product = $prodModel->get_by_id($_GET['id']);
+        $prodModel = $this->model('DeviceModel');
+        $device = $prodModel->get_by_id($_GET['id']);
         
         if(isset($_POST['submit'])) {
-            $status = $prodModel->update_product($_POST);
+            $status = $prodModel->update_device($_POST);
             if($status->error) {
                 echo '<br> fail:'.$status->message;
             } else {
                 echo "<br> success";
-                $this->redirect('admin/manageproduct');
+                $this->redirect('admin/managedevice');
                 exit();
             }
         }
@@ -162,24 +162,24 @@ class Admin extends Controller {
         $customers = $custModel->get_customers();
 
         $this->view('admin/layout/header');
-        $this->view('admin/editproduct', array(
+        $this->view('admin/editdevice', array(
             'customers' => $customers,
             'cat' => $categories,
-            'product' => $product
+            'device' => $device
         ));
         $this->view('admin/layout/footer');
     }
-    public function deleteproduct() {
+    public function deletedevice() {
         if(!isset($_GET['id']))
-            $this->redirect('admin/manageproduct');
+            $this->redirect('admin/managedevice');
         
-        $prodModel = $this->model('ProductModel');
+        $prodModel = $this->model('DeviceModel');
         $status = $prodModel->delete_by_id($_GET['id']);
         if($status->error) {
             echo '<br> fail:'.$status->message;
         } else {
             echo "<br> success";
-            $this->redirect('admin/manageproduct');
+            $this->redirect('admin/managedevice');
             exit();
         }
     }
@@ -206,8 +206,11 @@ class Admin extends Controller {
 
         $custModel = $this->model('CustomerModel');
         $customer = $custModel->get_by_id($_GET['id']);
-        $prodModel = $this->model('ProductModel');
-        $products = $prodModel->get_by_customer_id($_GET['id']);
+        $prodModel = $this->model('DeviceModel');
+        $devices = $prodModel->get_by_customer_id($_GET['id']);
+        $serModel = $this->model('ServiceModel');
+        $faults = $serModel->get_by_customer_id('fault_repair', $_GET['id']);
+        // $faults = $serModel->get_by_customer_id('fault_repair');
 
         $this->view('admin/layout/header');
         $this->view('admin/layout/sidelink', array(
@@ -215,7 +218,8 @@ class Admin extends Controller {
         ));
         $this->view('admin/viewcustomer', array(
             'customer' => $customer,
-            'products' => $products
+            'devices' => $devices,
+            'faults' => $faults
         ));
         $this->view('admin/layout/footer');
     }
@@ -234,6 +238,32 @@ class Admin extends Controller {
         }
         $this->view('admin/layout/header');
         $this->view('admin/addcustomer');
+        $this->view('admin/layout/footer');
+    }
+    public function editcustomer() {
+        if(!isset($_GET['id']))
+            $this->redirect('admin/managecustomer');
+
+        $custModel = $this->model('CustomerModel');
+        
+        if(isset($_POST['submit'])) {
+            $status = $custModel->update_customer($_POST);
+
+            if($status->error) {
+                echo 'Fail : '.$status->message;
+            } else {
+                echo 'Success';
+                $this->redirect('admin/managecustomer');
+                exit();
+            }
+        }
+
+        $customer = $custModel->get_by_id($_GET['id']);
+
+        $this->view('admin/layout/header');
+        $this->view('admin/editcustomer', array(
+            'customer' => $customer
+        ));
         $this->view('admin/layout/footer');
     }
 
@@ -298,26 +328,127 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function deleteengineer() {
+        if(!isset($_GET['id']))
+            $this->redirect('admin/manageengineer');
 
+        $engModel = $this->model('EngineerModel');
+        $status = $engModel->delete_by_id($_GET['id']);
+        if(!$status->error) {
+            $st = $engModel->delete_expertise_by_engineer_id($_GET['id']);
+            if(!$st->error) {
+                $this->redirect('admin/manageengineer');
+            } else {
+                die('#Error : '.$st->message.' <a href="'.SC_URL.'admin/manageengineer">go back</a>');
+            }
+        } else {
+            die('#Error : '.$status->message.' <a href="'.SC_URL.'admin/manageengineer">go back</a>');
+        }
     }
 
     /**
      * Manage Fault Request
      */
     public function managefault() {
+        $serviceModel = $this->model('ServiceModel');
+        $faults = $serviceModel->get_services('fault_repair');
+
         $this->view('admin/layout/header');
         $this->view('admin/layout/sidelink', array(
             "mfault" => true
         ));
-        $this->view('admin/managefault');
+        $this->view('admin/managefault',array(
+            'faults' => $faults
+        ));
         $this->view('admin/layout/footer');
     }
+    public function addfault() {
+        
+        if(isset($_POST['submit'])) {
+            $serModel = $this->model('ServiceModel');
+            $status = $serModel->request_service($_POST);
+            if($status->error) {
+                die('#Error: '.$status->message.'; Go Back <a href="'.SC_URL.'admin/managefault">here</a>');
+            }
+            $this->redirect('admin/managefault');
+            exit();
+        }
+        
+        $prodModel = $this->model('DeviceModel');
+        $devices = $prodModel->get_devices();
+
+        $this->view('admin/layout/header');
+        $this->view('admin/addfault', array(
+            'devices' => $devices
+        ));
+        $this->view('admin/layout/footer');
+    }
+    public function viewfault() {
+        if(!isset($_GET['id']))
+            $this->redirect('admin/managefault');
+        
+        $serModel = $this->model('ServiceModel');
+
+        // assign engineer, service charge and give approval
+        if(isset($_POST['submit-approve'])) {
+            $serModel->approve($_POST);
+        }
+
+        $stat = $serModel->get_status('fault_repair', $_GET['id']);
+
+        if($stat->status != 'APPROVED') {
+            $fault = $serModel->get_by_id('fault_repair', $_GET['id']);
+            if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
+        } else {
+            $fault = $serModel->get_by_id_approved('fault_repair', $_GET['id']);
+            if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
+        }
+
+        $engineers = null;
+        if($fault->status != 'APPROVED') {
+            $engModel = $this->model('EngineerModel');
+            $engineers = $engModel->get_by_device_category_id($fault->device_category_id);
+        }
+
+        $this->view('admin/layout/header');
+        $this->view('admin/viewfault',array(
+            'fault' => $fault,
+            'engineers' => $engineers
+        ));
+        $this->view('admin/layout/footer');
+    }
+    
+    public function rejectfault() {
+        if(isset($_GET['id'])) {
+            $serModel = $this->model('ServiceModel');
+            $status = $serModel->reject($_GET['id']);
+            if($status->error) {
+                die('#Error: '.$status->message.' occured: go back <a href="'.SC_URL.'admin">here</a>');
+            }
+        }
+        $this->redirect('admin/managefault');
+        exit();
+    }
+
+    /**
+     * Manage maintenance services
+     */
     public function managemaintain() {
+        $serviceModel = $this->model('ServiceModel');
+        $services = $serviceModel->get_services('fault_repair');
+
         $this->view('admin/layout/header');
         $this->view('admin/layout/sidelink', array(
             "mmaintain" => true
         ));
-        $this->view('admin/managemaintain');
+        $this->view('admin/managemaintain',array(
+            'services' => $services
+        ));
+        $this->view('admin/layout/footer');
+    }
+
+    public function addmaintain() {
+        $this->view('admin/layout/header');
+        $this->view('admin/addmaintain');
         $this->view('admin/layout/footer');
     }
 

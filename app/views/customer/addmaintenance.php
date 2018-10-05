@@ -1,9 +1,10 @@
 <div class="container" style="margin-bottom:40px">
-    <h1 class="page-header">Request Fault</h1>
+    <h1 class="page-header">Add Maintenance</h1>
     <form action="" method="POST" role="form">
-        <input type="hidden" name="type" value="fault_repair">
+        <input type="hidden" name="type" value="maintenance">
+        <input type="hidden" name="price" value="1000.00">
         <div class="form-group">
-            <label>Product/Device :</label>
+            <label>Choose Device :</label>
             <?php if(isset($data['devices'])) : ?>
                 <select class="form-control" name="device_id">
                     <?php foreach($data['devices'] as $device): ?>

@@ -118,11 +118,14 @@ form[name=book-appointment] .nav-tabs {
 #home-carousal .carousel-inner{height:100%;}
 
 #home-carousal .carousel-caption {
-    top: 50%;
-    transform: translateY(-50%);
-    bottom: auto;
-    color: #000;
-    text-shadow: -1px -1px 1px #fff, 0px 0px 1px #fff, 1px 0px 1px #fff, 0px 1px 1px #fff;
+	top: 50%;
+	background: rgba(0, 0, 0, 0.3);
+	padding: 40px 20px;
+	border-radius: 50px;
+	transform: translateY(-50%);
+	bottom: auto;
+	color: #fff;
+	/* text-shadow: -1px -1px 1px #fff, 0px 0px 1px #fff, 1px 0px 1px #fff, 0px 1px 1px #fff; */
 }
 
 #home-carousal .carousel-caption h1 {
@@ -347,7 +350,7 @@ form[name=book-appointment] .nav-tabs {
     border-radius: 40px;
     padding: 10px 40px;
     border-style: solid;
-    border-width: 1px;
+    border-width: 2px;
     font-weight: bold;
 }
 .btn-border-white {
@@ -684,10 +687,25 @@ padding-bottom: 80px;
 }
 .dashboard .list-group a {
 	text-align: center;
+	margin-bottom: 20px;
 	display: block;
 	border: 2px solid;
 	padding: 30px;
+	text-decoration: none;
+	line-height: 2em;
+	transition: 0.4s all ease-in-out;
 }
 .dashboard .list-group .glyphicon {
+	/* color:#ed1c24; */
 	font-size: 100px;
+	transform: rotate(0deg) scale(0.8);
+	transition: 0.5s all;
+}
+.dashboard a:hover {
+	background:#f1f1f1;
+	color:#000;
+	border:2px solid #000
+}
+.dashboard a:hover .glyphicon {
+	transform: rotate(360deg) scale(1.1);
 }

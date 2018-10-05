@@ -23,7 +23,7 @@
                 </div>
             <?php endforeach; 
             else : ?>
-                <p class="alert alert-info">You didn't add any product categories in admin area</p>
+                <p class="alert alert-info">You didn't add any device categories in admin area</p>
             <?php endif; ?>
         </div>
         <div class="form-group">

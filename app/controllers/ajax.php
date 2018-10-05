@@ -29,6 +29,18 @@ class Ajax extends Controller {
         }
     }
 
+    public function get_engineer_by_expertise() {
+        if(!isset($_POST['device_category_id']) && empty($_POST['device_category_id'])) {
+            echo json_encode(array(
+                'error'=>'No device category id pass.'
+            ));exit();
+        }
+
+        $engModel = $this->model('EngineerModel');
+        $result = $engModel->get_by_device_category_id($_POST['device_category_id']);
+        echo json_encode($result);
+    }
+
     public function add_device() {
 
     }

@@ -5,8 +5,8 @@
 			<div class="container">
 				<div class="carousel-caption">
 					<h1>FAULT REPAIR</h1>
-					<p><span>Our team of Expert Engineers.</span></p>
-					<a class="btn btn-lg btn-primary btn-border btn-border-black" href="<?= SC_URL ?>customer/register" role="button">Register Now <i class="glyphicon glyphicon-arrow-right"></i></a>
+					<p><span>Our team of Expert Engineers.</span> Repair means responding to the breakdown of equipment and undertaking work to correct the problem in order to return the equipment to a working condition.</p>
+					<a class="btn btn-lg btn-primary btn-border btn-border-white" href="<?= SC_URL ?>customer/register" role="button">Register Now <i class="glyphicon glyphicon-arrow-right"></i></a>
 				</div>
 			</div>
 		</div>
@@ -16,7 +16,7 @@
 				<div class="carousel-caption">
 					<h1>Maintenance Services</h1>
 					<p><span>We offer quaterly Maintenance services for numberous customers around the world for both home and business.</span></p>
-					<a class="btn btn-lg btn-primary btn-border btn-border-black" href="<?= SC_URL ?>customer/register">Register Now <i class="glyphicon glyphicon-arrow-right"></i></a>
+					<a class="btn btn-lg btn-primary btn-border btn-border-white" href="<?= SC_URL ?>customer/register">Register Now <i class="glyphicon glyphicon-arrow-right"></i></a>
 				</div>
 			</div>
 		</div>

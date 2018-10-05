@@ -5,7 +5,7 @@
         <div class="form-group">
             <label>Product Category</label>
             <?php if(isset($data['categories'])) : ?>
-            <select class="form-control" name="product_category_id">
+            <select class="form-control" name="device_category_id">
                 <?php foreach($data['categories'] as $category): ?>
                     <option value="<?= $category->id ?>"><?= $category->name ?></option>
                 <?php endforeach; ?>

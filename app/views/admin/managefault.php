@@ -1,30 +1,28 @@
 
 		<div class="col-md-10">
-            <h4 class="page-header">Manage Fault Request</h4>
+			<h2 class="page-header">Manage Fault Request <a href="<?= SC_URL ?>admin/addfault" class="pull-right btn btn-primary">ADD</a></h2>
             
             <table class="table table-hover">
 			<thead>
 				<tr>
-				<th>ID</th>
-				<th>Product</th>
-				<th>Alternative Address</th>
-				<th>Alternative Phone</th>
-				<th>Status</th>
-				<th>Date of Request</th>
-				<!-- <th>options</td> -->
+					<th>ID</th>
+					<th>Customer</th>
+					<th>Product</th>
+					<th>Status</th>
+					<th>Date of Request</th>
+					<th>options</td>
 				</tr>
 			</thead>
 			<tbody>
-				<?php if(isset($data['faults'])) : 
+				<?php if(isset($data['faults']) && !empty($data['faults'])) :
 				foreach($data['faults'] as $fault) : ?>
 				<tr>
 					<td><?= $fault->id ?></td>
-					<td><?= $fault->product_name ?> (<a href="<?= SC_URL ?>customer/editdevice?id=<?= $fault->id ?>"><?= $fault->id ?></a>)</td>
-					<td><?= $fault->alternative_address ?></td>
-					<td><?= $fault->alternative_phone ?></td>
+					<td><?= $fault->customer_name ?> (<a href="<?= SC_URL ?>admin/viewcustomer?id=<?= $fault->customer_id ?>"><?= $fault->customer_id ?></a>)</td>
+					<td><?= $fault->device_name ?> (<a href="<?= SC_URL ?>admin/editdevice?id=<?= $fault->id ?>"><?= $fault->id ?></a>)</td>
 					<td><?= $fault->status ?></td>
 					<td><?= $fault->requested_date ?></td>
-					<!-- <td><a href="">view</a></td> -->
+					<td><a href="<?= SC_URL ?>admin/viewfault?id=<?= $fault->id ?>">view</a></td>
 				</tr>
 				<?php endforeach;
 				else : ?>

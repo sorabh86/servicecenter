@@ -3,13 +3,13 @@
 			<h2 class="page-header">Manage Categories</h2>
             
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4" style="padding:20px;border:1px solid #ddd;">
                     <form action="" method="POST" role="form">
                         <div class="form-group">
                             <label for="">Name</label>
                             <input type="text" class="form-control" name="name" placeholder="Name of Category, i.e. TV, AC, etc." required>
                         </div>
-                        <button name="submit" type="submit" class="btn btn-primary">ADD</button>
+                        <button name="submit" type="submit" class="btn btn-primary">ADD NEW</button>
                     </form>
                 </div>
                 <div class="col-md-8">

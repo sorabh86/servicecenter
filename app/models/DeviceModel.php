@@ -1,18 +1,18 @@
 <?php
 
 
-class ProductModel {
+class DeviceModel {
     protected $db;
 
     function __construct($db) {
         $this->db = $db;
     }
 
-    public function get_products() {
+    public function get_devices() {
         try {
-            $stmt = $this->db->prepare('SELECT P.*, C.name AS customer_name, PD.name AS product_category_name FROM products P 
+            $stmt = $this->db->prepare('SELECT P.*, C.name AS customer_name, PD.name AS device_category_name FROM devices P 
                 INNER JOIN customers C ON P.customer_id=C.id 
-                INNER JOIN product_category PD ON P.product_category_id=PD.id');
+                INNER JOIN device_category PD ON P.device_category_id=PD.id');
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $e) {
@@ -25,9 +25,9 @@ class ProductModel {
     public function get_by_customer_id($id) {
         try {
             $stmt = $this->db->prepare('SELECT P.*, C.name AS customer_name,
-                PD.name AS product_category_name FROM products P
+                PD.name AS device_category_name FROM devices P
                 INNER JOIN customers C ON P.customer_id=C.id
-                INNER JOIN product_category PD ON P.product_category_id=PD.id
+                INNER JOIN device_category PD ON P.device_category_id=PD.id
                 WHERE customer_id=?');
             $stmt->execute(array($id));
             return $stmt->fetchAll();
@@ -40,7 +40,7 @@ class ProductModel {
     }
     public function get_by_id($id) {
         try {
-            $stmt = $this->db->prepare('SELECT * FROM products WHERE id=?');
+            $stmt = $this->db->prepare('SELECT * FROM devices WHERE id=?');
             $stmt->execute(array($id));
             return $stmt->fetch();
         } catch (PDOException $e) {
@@ -50,13 +50,13 @@ class ProductModel {
             );
         }
     }
-    public function update_product($post) {
+    public function update_device($post) {
         try {
-            $stmt = $this->db->prepare('UPDATE products SET customer_id=?, product_category_id=?, 
+            $stmt = $this->db->prepare('UPDATE devices SET customer_id=?, device_category_id=?, 
                 brand_name=?, serial_no=?, purchase_price=?, date_of_purchase=? WHERE id=?');
             $stmt->execute(array(
                 $post['customer_id'],
-                $post['product_category_id'],
+                $post['device_category_id'],
                 $post['brand_name'],
                 $post['serial_no'],
                 $post['purchase_price'],
@@ -75,12 +75,12 @@ class ProductModel {
         }
     }
 
-    public function insert_product($post) {
+    public function insert_device($post) {
         try {
-            $stmt = $this->db->prepare('INSERT INTO products (customer_id, product_category_id, brand_name, serial_no, purchase_price, date_of_purchase) VALUES (?,?,?,?,?,?)');
+            $stmt = $this->db->prepare('INSERT INTO devices (customer_id, device_category_id, brand_name, serial_no, purchase_price, date_of_purchase) VALUES (?,?,?,?,?,?)');
             $stmt->execute(array(
                 $post['customer_id'],
-                $post['product_category_id'],
+                $post['device_category_id'],
                 $post['brand_name'],
                 $post['serial_no'],
                 $post['purchase_price'],
@@ -100,7 +100,7 @@ class ProductModel {
 
     public function delete_by_id($id) {
         try {
-            $stmt = $this->db->prepare("DELETE FROM `products` WHERE id=?");
+            $stmt = $this->db->prepare("DELETE FROM `devices` WHERE id=?");
             $stmt->execute(array($id));
             return (object)array(
                 'error' => false,
@@ -111,6 +111,30 @@ class ProductModel {
                 'error' => true,
                 'message' => $e->getMessage() 
             );
+        }
+    }
+
+    public function get_part_by_service_id($id) {
+        try {
+            $stmt = $this->db->prepare('SELECT * FROM device_parts WHERE service_id=?');
+            $stmt->execute(array($id));
+            return $stmt->fetchAll();
+        } catch(PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
+    }
+    public function insert_part($post) {
+        try {
+            $stmt = $this->db->prepare('INSERT INTO device_parts (service_id,part_name,description,price,date) VALUES (?,?,?,?,NOW())');
+            $stmt->execute(array(
+                $post['service_id'],
+                $post['part_name'],
+                $post['description'],
+                $post['price']
+            ));
+            return (object)array('error'=>false,'message'=>'Successfully Added');
+        } catch (PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
         }
     }
 }

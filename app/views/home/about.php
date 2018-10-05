@@ -4,10 +4,10 @@
 		<h2 class="parallax">ABOUT US</h2>
 		<div class="container">
 			<p class="welcome-txt">Our company provide Maintenance Services to our customers on different 
-				household electrical and electronics products such as TV, Washing Machine, Refrigerator, 
+				household electrical and electronics devices such as TV, Washing Machine, Refrigerator, 
 				Air Conditioners, Air Coolers, Microwave Ovens etc. The company takes maintenance contract 
 				for various households and industry clients. They maintain all the information about these 
-				products including make, date of purchase, serial number of machine, original cost of the 
+				devices including make, date of purchase, serial number of machine, original cost of the 
 				machine etc. The company performs two kinds of maintenance services - preventive maintenance 
 				which are done periodically once in every quarter and fault repair - this maintenance is done 
 				whenever a call is made by the client. Company maintains the details of both these types of 
