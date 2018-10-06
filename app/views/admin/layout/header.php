@@ -7,12 +7,15 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="<?= SC_URL ?>/img/favicon.png">
+    <link rel="icon" href="<?= SC_URL ?>img/favicon.png">
 
     <title>Service Center Admin</title>
     <!-- Bootstrap core CSS -->
     <link href="<?= SC_URL ?>css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= SC_URL ?>css/admin-style.css" rel="stylesheet">
+    <script>
+      var SC_URL = "<?= SC_URL ?>";
+    </script>
   </head>
   <body>
     
@@ -25,8 +28,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a href="<?= SC_URL ?>/">
-          <img height="45" src="<?= SC_URL ?>/img/logo-white.png" alt="Service Center Admin Logo">
+          <a href="<?= SC_URL ?>">
+          <img height="45" src="<?= SC_URL ?>img/logo-white.png" alt="Service Center Admin Logo">
           </a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">

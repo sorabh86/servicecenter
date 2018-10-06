@@ -137,4 +137,13 @@ class DeviceModel {
             return (object)array('error'=>true,'message'=>$e->getMessage());
         }
     }
+    public function delete_part_by_id($id) {
+        try {
+            $stmt = $this->db->prepare('DELETE FROM device_parts WHERE id=?');
+            $stmt->execute(array($id));
+            return (object)array('error'=>false,'message'=>'Deleted Successfully');
+        } catch(PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
+    }
 }

@@ -4,7 +4,7 @@
     <h2 class="page-header">
         <a href="<?= SC_URL ?>admin/managefault" class="btn btn-default">&lt; go back</a>
         <span style="margin-left:40px">Fault Request Details</span>
-        <a class="btn btn-warning pull-right" href="<?= SC_URL ?>admin/generatebill">Generate Bill</a>
+        <a class="btn btn-warning pull-right" href="<?= SC_URL ?>admin/generatebill?id=<?= $_GET['id'] ?>">Generate Bill</a>
     </h2>
     <div class="row">
         <div class="basic-desc col-md-8" style="border:1px solid #eee;padding:10px;">
@@ -52,29 +52,31 @@
         </div>
     </div>
     <?php if($fault->status == 'APPROVED') : ?>
-    <h3 class="page-header">Replaced Parts <a class="btn btn-primary pull-right" href="">Add</a></h3>
+    <h3 class="page-header">Replaced Parts <a class="btn btn-primary pull-right" href="<?= SC_URL ?>admin/adddevicepart?id=<?= $_GET['id'] ?>">Add</a></h3>
     <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>description</th>
-                <th>Price</th>
-                <th>date</th>
-                <th>option</th>
+                <th>Description</th>
+                <th>Price (Rs)</th>
+                <th>Date</th>
+                <th>Option</th>
             </tr>
         </thead>
         <tbody>
-            <?php if(isset($data['parts']) && !empty($data['parts'])) : ?>
+            <?php if(isset($data['parts']) && !empty($data['parts'])) : 
+                foreach($data['parts'] as $part) : ?>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><a href="">delete</a></td>
+                <td><?= $part->id ?></td>
+                <td><?= $part->part_name ?></td>
+                <td><?= $part->description ?></td>
+                <td><?= $part->price ?></td>
+                <td><?= $part->date ?></td>
+                <td><a href="<?= SC_URL ?>admin/deletedevicepart?sid=<?= $_GET['id'] ?>&id=<?= $part->id ?>">delete</a></td>
             </tr>
-            <?php else : ?>
+            <?php endforeach;
+            else : ?>
                 <tr><td colspan=6 class="alert alert-info">No Replaced Parts Found.</td></tr>
             <?php endif; ?>
         </tbody>

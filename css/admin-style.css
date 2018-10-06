@@ -4,3 +4,12 @@
 th, td {
     vertical-align: middle !important;
 }
+
+.gif-loader {
+    position: absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background: rgba(0, 0, 0, 0.4) url(../img/loader.gif) no-repeat center;
+}

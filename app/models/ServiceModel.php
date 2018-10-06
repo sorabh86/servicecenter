@@ -98,6 +98,18 @@ class ServiceModel {
         }
     }
 
+    public function insert_approved($post) {
+        try {
+            $stmt = $this->db->prepare();
+            $stmt->execute(array(
+
+            ));
+            return (object)array('error'=>false,'message'=>'successfully inserted');
+        } catch (PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
+    }
+
     public function approve($post) {
         try {
             $stmt = $this->db->prepare("UPDATE services SET status='APPROVED', engineer_id=?, price=? WHERE id=?");
@@ -107,7 +119,7 @@ class ServiceModel {
                 $post['id'],
             ));
             return (object)array('error'=>false,'message'=>'Successfully updated');
-        } catch(Exception $e) {
+        } catch(PDOException $e) {
             return (object)array('error'=>true,'message'=>$e->getMessage());
         }
     }
@@ -116,7 +128,7 @@ class ServiceModel {
             $stmt = $this->db->prepare("UPDATE services SET status='REJECTED' WHERE id=?");
             $stmt->execute(array($id));
             return (object)array('error'=>false,'message'=>'Successfully updated');
-        } catch(Exception $e) {
+        } catch(PDOException $e) {
             return (object)array('error'=>true,'message'=>$e->getMessage());
         }
     }

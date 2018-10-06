@@ -393,30 +393,55 @@ class Admin extends Controller {
             $serModel->approve($_POST);
         }
 
+        $parts = null;
+        $engineers = null;
         $stat = $serModel->get_status('fault_repair', $_GET['id']);
 
         if($stat->status != 'APPROVED') {
             $fault = $serModel->get_by_id('fault_repair', $_GET['id']);
             if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
+
+            $engModel = $this->model('EngineerModel');
+            $engineers = $engModel->get_by_device_category_id($fault->device_category_id);
         } else {
             $fault = $serModel->get_by_id_approved('fault_repair', $_GET['id']);
             if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
-        }
 
-        $engineers = null;
-        if($fault->status != 'APPROVED') {
-            $engModel = $this->model('EngineerModel');
-            $engineers = $engModel->get_by_device_category_id($fault->device_category_id);
+            $devModel = $this->model('DeviceModel');
+            $parts = $devModel->get_part_by_service_id($_GET['id']);
         }
 
         $this->view('admin/layout/header');
         $this->view('admin/viewfault',array(
             'fault' => $fault,
-            'engineers' => $engineers
+            'engineers' => $engineers,
+            'parts' => $parts
         ));
         $this->view('admin/layout/footer');
     }
-    
+    public function adddevicepart() {
+        if(isset($_POST['submit'])) {
+            $devModel = $this->model('DeviceModel');
+            $stat = $devModel->insert_part($_POST);
+            if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/viewfault?id='.$_GET['id'].'" >goback</a>');
+            $this->redirect('admin/viewfault?id='.$_GET['id']);
+            exit();
+        }
+
+        $this->view('admin/layout/header');
+        $this->view('admin/adddevicepart');
+        $this->view('admin/layout/footer');
+    }
+    public function deletedevicepart() {
+        if(isset($_GET['id'])) {
+            $devModel = $this->model('DeviceModel');
+            $stat = $devModel->delete_part_by_id($_GET['id']);
+            if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/viewfault?id='.$_GET['sid'].'" >goback</a>');
+            
+            $this->redirect('admin/viewfault?id='.$_GET['sid']);
+            exit();
+        }
+    }
     public function rejectfault() {
         if(isset($_GET['id'])) {
             $serModel = $this->model('ServiceModel');
@@ -428,13 +453,104 @@ class Admin extends Controller {
         $this->redirect('admin/managefault');
         exit();
     }
+    public function generatebill() {
+        $serModel = $this->model('ServiceModel');
+        $str = '<html>
+            <head><title>bill</title></head>
+            <body style="background:#eee">
+                <div style="margin:auto;width:800px;background:#fff;padding:10px">
+                    <div style="padding:20px;overflow:hidden">
+                        <a href="'.SC_URL.'admin/viewfault?id='.$_GET['id'].'">< go back</a>
+                        <button onclick="window.print()" style="float:right;margin-left:20px">print</button>
+                    </div>
+                    <table style="width:100%;">
+                        <tr style="border-bottom:1px solid #ddd;">
+                            <td><image height="60" src="'.SC_URL.'img/logo.png" alt="Service Center"></td>
+                            <td></td>
+                            <td align="right">Date : '.date('Y-m-d').'</td>
+                        </tr>
+                    </table>';
+
+        $stat = $serModel->get_status('fault_repair', $_GET['id']);
+
+        if($stat->status != 'APPROVED') {
+            $fault = $serModel->get_by_id('fault_repair', $_GET['id']);
+            if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
+
+            $str .= "<p>Bill cannot be generated for non approved service</p>";
+        } else {
+            $fault = $serModel->get_by_id_approved('fault_repair', $_GET['id']);
+            if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
+
+            $devModel = $this->model('DeviceModel');
+            $parts = $devModel->get_part_by_service_id($_GET['id']);
+            if(isset($parts->error) && $parts->error) die('Error: '.$parts->message);
+
+            $address = (isset($fault->alternative_address) && $fault->alternative_address!='')?$fault->alternative_address:$fault->address;
+            $phone = (isset($fault->alternative_phone) && $fault->alternative_phone!='')?$fault->alternative_phone:$fault->phone;
+            $total = $fault->price;
+
+            $str .= '<div style="padding:20px;border:1px solid #ccc;">
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Name: </strong>
+                        <span>'.$fault->customer_name.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Address: </strong>
+                        <span>'.$address.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Phone: </strong>
+                        <span>'.$phone.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Description: </strong>
+                        <span>'.$fault->description.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Requested Date: </strong>
+                        <span>'.$fault->requested_date.'</span>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <strong style="display:inline-block;width:150px;">Device: </strong>
+                        <span>'.$fault->device_category_name.': '.$fault->brand_name.' '.$fault->serial_no.'('.$fault->date_of_purchase.')</span>
+                    </div>
+                </div>
+                <table style="width:100%;padding:10px;">
+                    <tr>
+                        <td align="right">Service Charge: </td>
+                        <td align="center">____________________</td>
+                        <td align="right">'.$fault->price.'</td>
+                    </tr>';
+            foreach($parts as $part) {
+                $str .= '<tr>
+                        <td align="right">'.$part->part_name.' </td>
+                        <td align="center">____________________</td>
+                        <td align="right">'.$part->price.'</td>
+                    </tr>';
+                $total += $part->price;
+            }
+            $str .= '<tr>
+                    <td></td>
+                    <td align="right"><strong>TOTAL:</strong></td>
+                    <td align="right"><strong>'.$total.'</strong></td>
+                </tr>
+            </table>';
+        }
+
+        $str .= '    </div>
+            </body>
+        </html>';
+        echo $str;
+    }
 
     /**
      * Manage maintenance services
      */
     public function managemaintain() {
         $serviceModel = $this->model('ServiceModel');
-        $services = $serviceModel->get_services('fault_repair');
+        $services = $serviceModel->get_services('maintenance');
+        if(isset($services->error) && $services->error) die('Error:'.$services->message.'. <a href="">go back</a>');
 
         $this->view('admin/layout/header');
         $this->view('admin/layout/sidelink', array(
@@ -447,8 +563,28 @@ class Admin extends Controller {
     }
 
     public function addmaintain() {
+        if(isset($_POST['submit'])) {
+            $serviceModel = $this->model('ServiceModel');
+            $serviceModel->insert
+            echo '<pre>';
+            print_r($_POST);
+            echo '</pre>';
+            exit();
+        }
+
+        $devModel = $this->model('DeviceModel');
+        $devices = $devModel->get_devices();
+        if(isset($devices->error) && $devices->error) die('Error: '.$devices->message.'. <a href="'.SC_URL.'admin/managemaintain">go back</a>');
+
+        $engModel = $this->model('EngineerModel');
+        $device_category_id = $devices[0]->device_category_id;
+        $engineers = $engModel->get_by_device_category_id($device_category_id);
+
         $this->view('admin/layout/header');
-        $this->view('admin/addmaintain');
+        $this->view('admin/addmaintain',array(
+            'devices'=>$devices,
+            'engineers'=>$engineers
+        ));
         $this->view('admin/layout/footer');
     }
 

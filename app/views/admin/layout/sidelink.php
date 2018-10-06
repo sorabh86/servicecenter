@@ -12,14 +12,14 @@
 				</a>
 				<a class="list-group-item <?php echo ($data['mcustomers'])?'active':'' ?>" href="<?= SC_URL ?>admin/managecustomer">
 					Customers
-					<span class="badge">15</span>
+					<span class="badge"></span>
 				</a>
 				<a class="list-group-item <?php echo ($data['mengineers'])?'active':'' ?>" href="<?= SC_URL ?>admin/manageengineer">
 					<span class="badge"></span>
 					Engineers
 				</a>
 				<a class="list-group-item <?php echo ($data['mfault'])?'active':'' ?>" href="<?= SC_URL ?>admin/managefault">
-					<span class="badge">10</span>
+					<span class="badge"></span>
 					Fault Request 
 				</a>
 				<a class="list-group-item <?php echo ($data['mmaintain'])?'active':'' ?>" href="<?= SC_URL ?>admin/managemaintain">
