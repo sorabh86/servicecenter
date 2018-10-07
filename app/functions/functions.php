@@ -20,3 +20,4 @@ function is_home($action) {
         return true;
     }
 }
+

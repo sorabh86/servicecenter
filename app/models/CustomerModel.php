@@ -47,32 +47,53 @@ class CustomerModel {
             return false;
         };
     }
+    public function change_password($post) {
+        try {
+            $sql = "UPDATE customers SET password=? WHERE id=?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(array(
+                $post['password'],
+                $post['id']
+            ));
+            return (object)array('error'=>false,'message'=>'Update Successfully');
+        } catch(PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
+    }
     public function update_customer($post) {
-        $sql = "UPDATE INTO customers (password, name, phone, address) VALUES (?,?,?,?) WHERE id=?";
-        $stmt = $this->db->prepare($sql);
-        if($stmt->execute(array(
-            $post['password'],
-            $post['name'],
-            $post['phone'],
-            $post['address'],
-            $post['id']
-        ))) {
-            return true;
-        } else {
-            return false;
-        };
+        try {
+            $sql = "UPDATE customers SET name=?, phone=?, address=? WHERE id=?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(array(
+                $post['name'],
+                $post['phone'],
+                $post['address'],
+                $post['id']
+            ));
+            return (object)array('error'=>false,'message'=>'Update Successfully');
+        } catch(PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
     }
 
     public function get_by_id($id) {
-        $stmt = $this->db->prepare("SELECT * FROM customers WHERE id=?");
-        $stmt->execute(array($id));
-        return $stmt->fetch();
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM customers WHERE id=?");
+            $stmt->execute(array($id));
+            return $stmt->fetch();
+        } catch(PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
     }
     
     public function get_customers() {
-        $stmt = $this->db->prepare("SELECT * FROM customers");
-        $stmt->execute();
-        return $stmt->fetchAll();
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM customers");
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
     }
 
     public function delete_customer() {

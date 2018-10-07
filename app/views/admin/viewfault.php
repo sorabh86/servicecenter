@@ -4,7 +4,7 @@
     <h2 class="page-header">
         <a href="<?= SC_URL ?>admin/managefault" class="btn btn-default">&lt; go back</a>
         <span style="margin-left:40px">Fault Request Details</span>
-        <a class="btn btn-warning pull-right" href="<?= SC_URL ?>admin/generatebill?id=<?= $_GET['id'] ?>">Generate Bill</a>
+        <a class="btn btn-warning pull-right" href="<?= SC_URL ?>admin/faultbill?id=<?= $_GET['id'] ?>">Generate Bill</a>
     </h2>
     <div class="row">
         <div class="basic-desc col-md-8" style="border:1px solid #eee;padding:10px;">

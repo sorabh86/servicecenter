@@ -77,34 +77,35 @@
             <?php endif;  ?>
             
             <h4 class="page-header">Customer Maintenance Services</h4>
-            <?php if(isset($data['maintenances']) && !empty($data['maintenances'])) : ?>
-                <table class="table table-responsive">
+            <?php if(isset($data['services']) && !empty($data['services'])) : ?>
+                <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>id</th>
-                            <th>Customer Name</th>
-                            <th>Product Category</th>
-                            <th>Brand Name</th>
-                            <th>Serial No</th>
-                            <th>Purchase Price</th>
-                            <th>Purchase Date</th>
-                            <th>options</th>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Product</th>
+                            <th>Status</th>
+                            <th>Date of Request</th>
+                            <th>Duration (Years)</th>
+                            <th>options</td>
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($data['devices'] as $device) : ?>
+                        <?php if(isset($data['services']) && !empty($data['services'])) :
+                        foreach($data['services'] as $service) : ?>
                         <tr>
-                            <td><?= $device->id ?></td>
-                            <td><?= $device->customer_name.' ('.$device->customer_id.')' ?></td>
-                            <td><?= $device->device_category_name.' ('.$device->device_category_id.')' ?></td>
-                            <td><?= $device->brand_name ?></td>
-                            <td><?= $device->serial_no ?></td>
-                            <td><?= $device->purchase_price ?></td>
-                            <td><?= $device->date_of_purchase ?></td>
-                            <td><a href="<?= SC_URL ?>admin/editdevice?id=<?= $device->id ?>" class="btn btn-success">Edit</a>
-                                <a href="<?= SC_URL ?>admin/deletedevice?id=<?= $device->id ?>" class="btn btn-delete btn-danger">Delete</a></td>
-                        </tr> 
-                    <?php endforeach; ?>
+                            <td><?= $service->id ?></td>
+                            <td><?= $service->customer_name ?> (<a href="<?= SC_URL ?>admin/viewcustomer?id=<?= $service->customer_id ?>"><?= $service->customer_id ?></a>)</td>
+                            <td><?= $service->device_name ?> (<a href="<?= SC_URL ?>admin/editdevice?id=<?= $service->id ?>"><?= $service->id ?></a>)</td>
+                            <td><?= $service->status ?></td>
+                            <td><?= $service->requested_date ?></td>
+                            <td><?= $service->duration ?></td>
+                            <td><a href="<?= SC_URL ?>admin/viewmaintain?id=<?= $service->id ?>">view</a></td>
+                        </tr>
+                        <?php endforeach;
+                        else : ?>
+                        <tr><td class="alert alert-info" colspan=7>No Past Fault Repair Request found.</td><tr> 
+                        <?php endif; ?>
                     </tbody>
                 </table>
             <?php else: ?>

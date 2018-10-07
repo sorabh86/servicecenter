@@ -33,8 +33,18 @@
             <textarea name="description" class="form-control" placeholder="Some notes to inform" required></textarea>
         </div>
         <div class="form-group">
-            <label>Service Charge (Rs):</label>
-            <input type="text" name="price" class="form-control" placeholder="100.00" required></textarea>
+            <label>Duration (Years):</label>
+            <select name="duration" class="form-control" required>
+                <option value="1">1 Year</option>
+                <option value="2">2 Year</option>
+                <option value="3">3 Year</option>
+                <option value="4">4 Year</option>
+                <option value="5">5 Year</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Service Charge (Rs/year):</label>
+            <input type="text" name="price" class="form-control" value="1000.00" required></textarea>
         </div>
         
         <button name="submit" type="submit" class="btn btn-primary">Add</button>

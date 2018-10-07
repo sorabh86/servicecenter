@@ -1,6 +1,6 @@
 <div class="container" style="margin-bottom:40px">
     <h1 class="page-header">Add Maintenance</h1>
-    <form action="" method="POST" role="form">
+    <form name="add-maintenance" action="" method="POST" role="form">
         <input type="hidden" name="type" value="maintenance">
         <input type="hidden" name="price" value="1000.00">
         <div class="form-group">
@@ -18,8 +18,26 @@
             <?php endif; ?>
         </div>
         <div class="form-group">
-            <label>Description :</label>
-            <textarea name="description" class="form-control" placeholder="Describe those problems"></textarea>
+            <label>Any Special Note/Suggestion :</label>
+            <textarea name="description" class="form-control" placeholder="* You want this service based on appointment, etc.
+* You want to negociate before purchasing.
+* You to try our services, etc.
+* Any Special notes to remember, during providing serives at home/office." rows=4></textarea>
+        </div>
+        <div class="form-group">
+            <label>Duration (Years):</label>
+            <select name="duration" class="form-control" required>
+                <option value="1">1 Year</option>
+                <option value="2">2 Year</option>
+                <option value="3">3 Year</option>
+                <option value="4">4 Year</option>
+                <option value="5">5 Year</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Amount to Pay(Rs):</label>
+            <span class="alert-warning form-control price">1000</span>
+            <input name="price" type="hidden" value="1000">
         </div>
         <div class="row">
             <div class="col-md-4">
@@ -43,6 +61,6 @@
         </div>
         
         <button name="submit" type="submit" class="btn btn-primary">Add</button>
-        <a href="<?= SC_URL ?>customer/faultservice" class="btn btn-default">cancel</a>
+        <a href="<?= SC_URL ?>customer/maintenance" class="btn btn-default">cancel</a>
     </form>
 </div>

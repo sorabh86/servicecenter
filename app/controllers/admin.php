@@ -210,7 +210,7 @@ class Admin extends Controller {
         $devices = $prodModel->get_by_customer_id($_GET['id']);
         $serModel = $this->model('ServiceModel');
         $faults = $serModel->get_by_customer_id('fault_repair', $_GET['id']);
-        // $faults = $serModel->get_by_customer_id('fault_repair');
+        $services = $serModel->get_by_customer_id('maintenance', $_GET['id']);
 
         $this->view('admin/layout/header');
         $this->view('admin/layout/sidelink', array(
@@ -219,7 +219,8 @@ class Admin extends Controller {
         $this->view('admin/viewcustomer', array(
             'customer' => $customer,
             'devices' => $devices,
-            'faults' => $faults
+            'faults' => $faults,
+            'services' => $services
         ));
         $this->view('admin/layout/footer');
     }
@@ -390,7 +391,7 @@ class Admin extends Controller {
 
         // assign engineer, service charge and give approval
         if(isset($_POST['submit-approve'])) {
-            $serModel->approve($_POST);
+            $serModel->fault_approve($_POST);
         }
 
         $parts = null;
@@ -420,25 +421,50 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function adddevicepart() {
+        if(!isset($_GET['id']))
+            $this->redirect('admin');
+
+        $serModel = $this->model('ServiceModel');
+        $type = $serModel->get_type($_GET['id'])->type;
+
+        $page= 'managefault';
+        $redpage = 'viewfault';
+        if(isset($type)) {
+            if($type == 'maintenance') {
+                $page = 'managemaintain';
+                $redpage = 'viewmaintain';
+            }
+        }
+
         if(isset($_POST['submit'])) {
             $devModel = $this->model('DeviceModel');
             $stat = $devModel->insert_part($_POST);
             if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/viewfault?id='.$_GET['id'].'" >goback</a>');
-            $this->redirect('admin/viewfault?id='.$_GET['id']);
+            $this->redirect('admin/'.$redpage.'?id='.$_GET['id']);
             exit();
         }
 
         $this->view('admin/layout/header');
-        $this->view('admin/adddevicepart');
+        $this->view('admin/adddevicepart',array('page'=>$page));
         $this->view('admin/layout/footer');
     }
     public function deletedevicepart() {
         if(isset($_GET['id'])) {
+
+            $serModel = $this->model('ServiceModel');
+            $type = $serModel->get_type($_GET['sid'])->type;
+            
+            $redpage = 'viewfault';
+            if(isset($type)) {
+                if($type == 'maintenance')
+                    $redpage = 'viewmaintain';
+            }
+
             $devModel = $this->model('DeviceModel');
             $stat = $devModel->delete_part_by_id($_GET['id']);
-            if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/viewfault?id='.$_GET['sid'].'" >goback</a>');
+            if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/'.$redpage.'?id='.$_GET['sid'].'" >goback</a>');
             
-            $this->redirect('admin/viewfault?id='.$_GET['sid']);
+            $this->redirect('admin/'.$redpage.'?id='.$_GET['sid']);
             exit();
         }
     }
@@ -453,7 +479,7 @@ class Admin extends Controller {
         $this->redirect('admin/managefault');
         exit();
     }
-    public function generatebill() {
+    public function faultbill() {
         $serModel = $this->model('ServiceModel');
         $str = '<html>
             <head><title>bill</title></head>
@@ -474,9 +500,6 @@ class Admin extends Controller {
         $stat = $serModel->get_status('fault_repair', $_GET['id']);
 
         if($stat->status != 'APPROVED') {
-            $fault = $serModel->get_by_id('fault_repair', $_GET['id']);
-            if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
-
             $str .= "<p>Bill cannot be generated for non approved service</p>";
         } else {
             $fault = $serModel->get_by_id_approved('fault_repair', $_GET['id']);
@@ -533,7 +556,7 @@ class Admin extends Controller {
             $str .= '<tr>
                     <td></td>
                     <td align="right"><strong>TOTAL:</strong></td>
-                    <td align="right"><strong>'.$total.'</strong></td>
+                    <td align="right"><strong>'.number_format($total,2).'</strong></td>
                 </tr>
             </table>';
         }
@@ -565,10 +588,11 @@ class Admin extends Controller {
     public function addmaintain() {
         if(isset($_POST['submit'])) {
             $serviceModel = $this->model('ServiceModel');
-            $serviceModel->insert
-            echo '<pre>';
-            print_r($_POST);
-            echo '</pre>';
+            $_POST['alternative_address'] = '';
+            $_POST['alternative_phone'] = '';
+            $stat = $serviceModel->insert_approved($_POST);
+            if(isset($stat) && $stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/managemaintain">goback</a>');
+            $this->redirect('admin/managemaintain');
             exit();
         }
 
@@ -588,4 +612,329 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
 
+    public function viewmaintain() {
+        if(!isset($_GET['id']))
+            $this->redirect('admin/managefault');
+
+        $serModel = $this->model('ServiceModel');
+        // assign engineer, service charge and give approval
+        if(isset($_POST['submit-approve'])) {
+            $serModel->maintain_approve($_POST);
+        }
+
+        $parts = null;
+        $service = null;
+        
+        $service = $serModel->get_by_id('maintenance', $_GET['id']);
+        if(isset($service->error) && $service->error) die('Error: '.$service->message);
+        
+        $devModel = $this->model('DeviceModel');
+        $parts = $devModel->get_part_by_service_id($_GET['id']);
+        
+        $this->view('admin/layout/header');
+        $this->view('admin/viewmaintain',array(
+            'service' => $service,
+            'parts' => $parts
+        ));
+        $this->view('admin/layout/footer');
+    }
+
+    public function rejectmaintain() {
+        if(isset($_GET['id'])) {
+            $serModel = $this->model('ServiceModel');
+            $status = $serModel->reject($_GET['id']);
+            if($status->error) {
+                die('#Error: '.$status->message.' occured: go back <a href="'.SC_URL.'admin">here</a>');
+            }
+        }
+        $this->redirect('admin/managemaintain');
+        exit();
+    }
+    
+    public function maintainbill() {
+        /* generate bill for only selected parts */
+        if(isset($_POST['part-submit'])) {
+            $id = $_GET['id'];
+            $serModel = $this->model('ServiceModel');
+            $str = '<html>
+                <head><title>bill</title></head>
+                <body style="background:#eee">
+                    <div style="margin:auto;width:800px;background:#fff;padding:10px">
+                        <div style="padding:20px;overflow:hidden">
+                            <a href="'.SC_URL.'admin/viewmaintain?id='.$id.'">< go back</a>
+                            <button onclick="window.print()" style="float:right;margin-left:20px">print</button>
+                        </div>
+                        <table style="width:100%;">
+                            <tr style="border-bottom:1px solid #ddd;">
+                                <td><image height="60" src="'.SC_URL.'img/logo.png" alt="Service Center"></td>
+                                <td></td>
+                                <td align="right">Date : '.date('Y-m-d').'</td>
+                            </tr>
+                        </table>';
+            
+            if(isset($_POST['parts']) && !empty($_POST['parts'])) {
+                $parts = $_POST['parts'];
+                $service = $serModel->get_by_id('maintenance', $id);
+                if(isset($service->error) && $service->error) die('Error: '.$service->message);
+
+                $address = (isset($service->alternative_address) && $service->alternative_address!='')?$service->alternative_address:$service->address;
+                $phone = (isset($service->alternative_phone) && $service->alternative_phone!='')?$service->alternative_phone:$service->phone;
+                $total = 0;
+
+                $devModel = $this->model('DeviceModel');
+
+                $date = strtotime($service->requested_date);
+                $startdate = date('d F Y', $date);
+                $enddate = date('d F Y', strtotime($startdate.' + '.(365*$service->duration).' days'));
+
+                $str .= '<div style="padding:20px;border:1px solid #ccc;">
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Name: </strong>
+                            <span>'.$service->customer_name.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Address: </strong>
+                            <span>'.$address.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Phone: </strong>
+                            <span>'.$phone.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Description: </strong>
+                            <span>'.$service->description.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Start Date: </strong>
+                            <span>'.$startdate.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">End Date: </strong>
+                            <span>'.$enddate.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Duration: </strong>
+                            <span>'.$service->duration.' Year\'s</span>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <strong style="display:inline-block;width:150px;">Device: </strong>
+                            <span>'.$service->device_category_name.': '.$service->brand_name.' '.$service->serial_no.'('.$service->date_of_purchase.')</span>
+                        </div>
+                    </div>
+                    <table style="width:100%;padding:10px;">';
+                foreach($parts as $part) {
+                    $devPart = $devModel->get_part_by_id($part);
+                    if(isset($devPart->error) && $devPart->error) die('Error: '.$devPart->message);
+                    $str .= '<tr>
+                            <td align="right">'.$devPart->part_name.' </td>
+                            <td align="center">____________________</td>
+                            <td align="right">'.$devPart->price.'</td>
+                        </tr>';
+                    $total += $devPart->price;
+                }
+                $str .= '<tr>
+                            <td></td>
+                            <td align="right"><strong>TOTAL:</strong></td>
+                            <td align="right"><strong>'.number_format($total,2).'</strong></td>
+                        </tr>
+                    </table>';
+            } else {
+                $str .= '<p>You have to checked any of replaced parts first, Bill couldn\'t be generated, if their is no replaced parts for generating bill.</p>';
+            }
+
+            $str .= '</div>
+                </body>
+            </html>';
+            die($str);
+        }
+
+        /* this runs on creating bill for subscription fee only  */
+        if(isset($_POST['submit'])) {
+            $id = $_POST['id'];
+            $serModel = $this->model('ServiceModel');
+            $str = '<html>
+                <head><title>bill</title></head>
+                <body style="background:#eee">
+                    <div style="margin:auto;width:800px;background:#fff;padding:10px">
+                        <div style="padding:20px;overflow:hidden">
+                            <a href="'.SC_URL.'admin/viewmaintain?id='.$id.'">< go back</a>
+                            <button onclick="window.print()" style="float:right;margin-left:20px">print</button>
+                        </div>
+                        <table style="width:100%;">
+                            <tr style="border-bottom:1px solid #ddd;">
+                                <td><image height="60" src="'.SC_URL.'img/logo.png" alt="Service Center"></td>
+                                <td></td>
+                                <td align="right">Date : '.date('Y-m-d').'</td>
+                            </tr>
+                        </table>';
+            $stat = $serModel->get_status('maintenance', $id);
+
+            if($stat->status != 'APPROVED') {
+                $str .= "<p>Bill cannot be generated for non approved service</p>";
+            } else {
+                $service = $serModel->get_by_id('maintenance', $id);
+                if(isset($service->error) && $service->error) die('Error: '.$service->message);
+
+                $address = (isset($service->alternative_address) && $service->alternative_address!='')?$service->alternative_address:$service->address;
+                $phone = (isset($service->alternative_phone) && $service->alternative_phone!='')?$service->alternative_phone:$service->phone;
+                $total = $service->price;
+
+                $date = strtotime($service->requested_date);
+                $startdate = date('d F Y', $date);
+                $enddate = date('d F Y', strtotime($startdate.' + '.(365*$service->duration).' days'));
+
+                $str .= '<div style="padding:20px;border:1px solid #ccc;">
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Name: </strong>
+                            <span>'.$service->customer_name.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Address: </strong>
+                            <span>'.$address.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Phone: </strong>
+                            <span>'.$phone.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Description: </strong>
+                            <span>'.$service->description.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Start Date: </strong>
+                            <span>'.$startdate.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">End Date: </strong>
+                            <span>'.$enddate.'</span>
+                        </div>
+                        <div>
+                            <strong style="display:inline-block;width:150px;">Duration: </strong>
+                            <span>'.$service->duration.' Year\'s</span>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <strong style="display:inline-block;width:150px;">Device: </strong>
+                            <span>'.$service->device_category_name.': '.$service->brand_name.' '.$service->serial_no.'('.$service->date_of_purchase.')</span>
+                        </div>
+                    </div>
+                    <table style="width:100%;padding:10px;">
+                        <tr>
+                            <td align="right">Subscription Fee: </td>
+                            <td align="center">____________________</td>
+                            <td align="right">'.$service->price.'</td>
+                        </tr>';
+                
+                $str .= '<tr>
+                        <td></td>
+                        <td align="right"><strong>TOTAL:</strong></td>
+                        <td align="right"><strong>'.number_format($total,2).'</strong></td>
+                    </tr>
+                </table>';
+            }
+
+            $str .= '    </div>
+                </body>
+            </html>';
+            die($str);
+        }
+
+        /* here bill created based on each fault and include service charge & parts replacement */
+        $serModel = $this->model('ServiceModel');
+        $str = '<html>
+            <head><title>bill</title></head>
+            <body style="background:#eee">
+                <div style="margin:auto;width:800px;background:#fff;padding:10px">
+                    <div style="padding:20px;overflow:hidden">
+                        <a href="'.SC_URL.'admin/viewmaintain?id='.$_GET['id'].'">< go back</a>
+                        <button onclick="window.print()" style="float:right;margin-left:20px">print</button>
+                    </div>
+                    <table style="width:100%;">
+                        <tr style="border-bottom:1px solid #ddd;">
+                            <td><image height="60" src="'.SC_URL.'img/logo.png" alt="Service Center"></td>
+                            <td></td>
+                            <td align="right">Date : '.date('Y-m-d').'</td>
+                        </tr>
+                    </table>';
+
+        $stat = $serModel->get_status('maintenance', $_GET['id']);
+
+        if($stat->status != 'APPROVED') {
+            $str .= "<p>Bill cannot be generated for non approved service</p>";
+        } else {
+            $service = $serModel->get_by_id('maintenance', $_GET['id']);
+            if(isset($service->error) && $service->error) die('Error: '.$service->message);
+
+            $devModel = $this->model('DeviceModel');
+            $parts = $devModel->get_part_by_service_id($_GET['id']);
+            if(isset($parts->error) && $parts->error) die('Error: '.$parts->message);
+
+            $address = (isset($service->alternative_address) && $service->alternative_address!='')?$service->alternative_address:$service->address;
+            $phone = (isset($service->alternative_phone) && $service->alternative_phone!='')?$service->alternative_phone:$service->phone;
+            $total = $service->price;
+
+            $date = strtotime($service->requested_date);
+            $startdate = date('d F Y', $date);
+            $enddate = date('d F Y', strtotime($startdate.' + '.(365*$service->duration).' days'));
+
+            $str .= '<div style="padding:20px;border:1px solid #ccc;">
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Name: </strong>
+                        <span>'.$service->customer_name.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Address: </strong>
+                        <span>'.$address.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Phone: </strong>
+                        <span>'.$phone.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Description: </strong>
+                        <span>'.$service->description.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Start Date: </strong>
+                        <span>'.$startdate.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">End Date: </strong>
+                        <span>'.$enddate.'</span>
+                    </div>
+                    <div>
+                        <strong style="display:inline-block;width:150px;">Duration: </strong>
+                        <span>'.$service->duration.' Year\'s</span>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <strong style="display:inline-block;width:150px;">Device: </strong>
+                        <span>'.$service->device_category_name.': '.$service->brand_name.' '.$service->serial_no.'('.$service->date_of_purchase.')</span>
+                    </div>
+                </div>
+                <table style="width:100%;padding:10px;">
+                    <tr>
+                        <td align="right">Subscription Fee: </td>
+                        <td align="center">____________________</td>
+                        <td align="right">'.$service->price.'</td>
+                    </tr>';
+            foreach($parts as $part) {
+                $str .= '<tr>
+                        <td align="right">'.$part->part_name.' </td>
+                        <td align="center">____________________</td>
+                        <td align="right">'.$part->price.'</td>
+                    </tr>';
+                $total += $part->price;
+            }
+            $str .= '<tr>
+                    <td></td>
+                    <td align="right"><strong>TOTAL:</strong></td>
+                    <td align="right"><strong>'.number_format($total,2).'</strong></td>
+                </tr>
+            </table>';
+        }
+
+        $str .= '    </div>
+            </body>
+        </html>';
+        die($str);
+    }
 }

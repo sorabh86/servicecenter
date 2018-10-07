@@ -9,6 +9,7 @@
 						<th>Product</th>
 						<th>Status</th>
 						<th>Date of Request</th>
+						<th>Duration (Years)</th>
 						<th>options</td>
 					</tr>
 				</thead>
@@ -21,7 +22,8 @@
 						<td><?= $service->device_name ?> (<a href="<?= SC_URL ?>admin/editdevice?id=<?= $service->id ?>"><?= $service->id ?></a>)</td>
 						<td><?= $service->status ?></td>
 						<td><?= $service->requested_date ?></td>
-						<td><a href="<?= SC_URL ?>admin/approveservice">view</a></td>
+						<td><?= $service->duration ?></td>
+						<td><a href="<?= SC_URL ?>admin/viewmaintain?id=<?= $service->id ?>">view</a></td>
 					</tr>
 					<?php endforeach;
 					else : ?>

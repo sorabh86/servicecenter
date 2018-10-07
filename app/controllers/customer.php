@@ -52,7 +52,8 @@ class Customer extends Controller {
 		if(isset($post['submit'])) {
 			$customerModel = $this->model('CustomerModel');
 			if($user = $customerModel->authenticate($post)) {
-				$_SESSION['user'] = $user;
+                $_SESSION['user'] = $user;
+                unset($_SESSION['user']->password);
                 $this->redirect('customer');
                 exit();
 			} else {
@@ -82,14 +83,33 @@ class Customer extends Controller {
         $this->view("layouts/footer");
     }
     public function editprofile() {
-        $post = $_POST;
-        if(isset($post['submit'])) {
+        if(isset($_POST['submit'])) {
             $customerModel = $this->model('CustomerModel');
+            $stat = $customerModel->update_customer($_POST);
+            if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'customer/editprofile">goback</a>');
 
+            $user = $_SESSION['user'];
+            $user->name = $_POST['name'];
+            $user->address = $_POST['address'];
+            $user->phone = $_POST['phone'];
+            $this->redirect('customer/profile');
         }
 
         $this->view("layouts/header");
         $this->view("customer/editprofile");
+        $this->view("layouts/footer");
+    }
+    public function changepassword() {
+        if(isset($_POST['submit'])) {
+            $customerModel = $this->model('CustomerModel');
+            $stat = $customerModel->change_password($_POST);
+            if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'customer/editprofile">goback</a>');
+
+            $this->redirect('customer/logout');
+        }
+        
+        $this->view("layouts/header");
+        $this->view("customer/changepassword");
         $this->view("layouts/footer");
     }
 

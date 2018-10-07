@@ -26,6 +26,18 @@ class ServiceModel {
             );
         }
     }
+    public function get_type($id) {
+        try {
+            $stmt = $this->db->prepare('SELECT type FROM services WHERE id=?');
+            $stmt->execute(array($id));
+            return $stmt->fetch();
+        } catch(PDOException $e) {
+            return (object)array(
+                'error' => true,
+                'message' => $e->getMessage() 
+            );
+        }
+    }
     public function get_status($type, $id) {
         try {
             $stmt=$this->db->prepare('SELECT status FROM services
@@ -100,9 +112,18 @@ class ServiceModel {
 
     public function insert_approved($post) {
         try {
-            $stmt = $this->db->prepare();
+            $stmt = $this->db->prepare('INSERT INTO services(type, device_id, alternative_address, 
+                alternative_phone, description, engineer_id, price, status, requested_date) 
+                VALUES(?,?,?,?,?,?,?,?,NOW())');
             $stmt->execute(array(
-
+                $post['type'],
+                $post['device_id'],
+                $post['alternative_address'],
+                $post['alternative_phone'],
+                $post['description'],
+                $post['engineer_id'],
+                $post['price'],
+                $post['status']
             ));
             return (object)array('error'=>false,'message'=>'successfully inserted');
         } catch (PDOException $e) {
@@ -110,13 +131,24 @@ class ServiceModel {
         }
     }
 
-    public function approve($post) {
+    public function fault_approve($post) {
         try {
             $stmt = $this->db->prepare("UPDATE services SET status='APPROVED', engineer_id=?, price=? WHERE id=?");
             $stmt->execute(array(
                 $post['engineer_id'],
                 $post['price'],
                 $post['id'],
+            ));
+            return (object)array('error'=>false,'message'=>'Successfully updated');
+        } catch(PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
+    }
+    public function maintain_approve($post) {
+        try {
+            $stmt = $this->db->prepare("UPDATE services SET status='APPROVED' WHERE id=?");
+            $stmt->execute(array(
+                $post['id']
             ));
             return (object)array('error'=>false,'message'=>'Successfully updated');
         } catch(PDOException $e) {
@@ -136,14 +168,17 @@ class ServiceModel {
     public function request_service($post) {
         try {
             $stmt = $this->db->prepare('INSERT INTO services 
-                (device_id, type, alternative_address, alternative_phone, description, status, requested_date) 
-                VALUES (?,?,?,?,?,?,NOW())');
+                (device_id, type, alternative_address, alternative_phone, description, 
+                price, duration, status, requested_date) 
+                VALUES (?,?,?,?,?,?,?,?,NOW())');
             $stmt->execute(array(
                 $post['device_id'],
                 $post['type'],
                 $post['alternative_address'],
                 $post['alternative_phone'],
                 $post['description'],
+                $post['price'],
+                $post['duration'],
                 'REQUESTED'
             ));
             return (object)array(

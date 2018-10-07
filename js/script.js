@@ -38,7 +38,7 @@
 (function ($) {
     var $registerForm = $(document.forms['customer-register']);
     var $loginForm = $(document.forms['customer-login']);
-    var $editProfileForm = $(document.forms['edit-profile']);
+    var $changePassword = $(document.forms['change-password']);
     var $bookAppForm = $(document.forms['book-appointment']);
     
     if($registerForm) {
@@ -54,8 +54,8 @@
             }
         });
     }
-    if($editProfileForm) {
-        $editProfileForm.validate({
+    if($changePassword) {
+        $changePassword.validate({
             rules: {
                 password: {
                     minlength: 5
@@ -207,5 +207,16 @@
         console.log('checked called');
             
     });
+
+    var $addMaintenanceForm = $(document.forms['add-maintenance']);
+    $addMaintenanceForm.find('[name=duration]').on('change', function (e) {
+        var $this = $(this);
+        var $priceInput = $addMaintenanceForm.find('[name=price]');
+        var price = $priceInput.val();
+        var duration = $this.val();
+
+        $addMaintenanceForm.find('.price').html(price+' X '+duration+' = <strong>'+(price*duration)+'</strong>');
+    });
+
 })(jQuery);
 

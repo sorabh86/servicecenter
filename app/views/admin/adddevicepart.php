@@ -17,6 +17,6 @@
         </div>
     
         <button name="submit" type="submit" class="btn btn-primary">Submit</button>
-        <a href="<?= SC_URL ?>admin/viewfault?id=<?= $_GET['id'] ?>" class="btn btn-default">Cancel</a>
+        <a href="<?= SC_URL ?>admin/<?= $data['page'] ?>?id=<?= $_GET['id'] ?>" class="btn btn-default">Cancel</a>
     </form>
 </div>

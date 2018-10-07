@@ -114,6 +114,16 @@ class DeviceModel {
         }
     }
 
+    public function get_part_by_id($id) {
+        try {
+            $stmt = $this->db->prepare('SELECT * FROM device_parts WHERE id=?');
+            $stmt->execute(array($id));
+            return $stmt->fetch();
+        } catch(PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
+    }
+
     public function get_part_by_service_id($id) {
         try {
             $stmt = $this->db->prepare('SELECT * FROM device_parts WHERE service_id=?');
