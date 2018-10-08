@@ -4,7 +4,11 @@
     <h2 class="page-header">
         <a href="<?= SC_URL ?>admin/managefault" class="btn btn-default">&lt; go back</a>
         <span style="margin-left:40px">Fault Request Details</span>
-        <a class="btn btn-warning pull-right" href="<?= SC_URL ?>admin/faultbill?id=<?= $_GET['id'] ?>">Generate Bill</a>
+        <?php if($fault->status=='PAID'): ?>
+            <span class="alert alert-info pull-right" >PAID</span>
+        <?php else: ?>
+            <a class="btn btn-warning pull-right" href="<?= SC_URL ?>admin/faultbill?id=<?= $_GET['id'] ?>">Generate Bill</a>
+        <?php endif; ?>
     </h2>
     <div class="row">
         <div class="basic-desc col-md-8" style="border:1px solid #eee;padding:10px;">
@@ -19,7 +23,7 @@
             <p class="text-warning bg-warning"><strong class="col-md-3 text-right">Status: </strong> <i><?= $fault->status ?></p>
         </div>
         <div class="col-md-4">
-            <?php if($fault->status != 'APPROVED') : ?>
+            <?php if($fault->status == 'REQUESTED') : ?>
                 <form class="form" action="" method="POST" role="form">
                     <input name="id" type="hidden" value="<?= $_GET['id'] ?>">
                     <div class="form-group">
@@ -43,7 +47,7 @@
                         <a class="btn btn-danger" href="<?= SC_URL ?>admin/rejectfault?id=<?= $_GET['id'] ?>">reject</a>
                     </div>
                 </form>
-            <?php else : ?>
+            <?php elseif($fault->status == 'APPROVED' || $fault->status == 'PAID') : ?>
                 <div class="alert alert-info">
                     <p><strong class="col-md-5 text-right">Service Charge: </strong> Rs.<?= $fault->price ?></p>
                     <p><strong class="col-md-5 text-right">Engineer Name: </strong> <?= $fault->engineer_name ?></p>
@@ -51,8 +55,12 @@
             <?php endif; ?>
         </div>
     </div>
-    <?php if($fault->status == 'APPROVED') : ?>
-    <h3 class="page-header">Replaced Parts <a class="btn btn-primary pull-right" href="<?= SC_URL ?>admin/adddevicepart?id=<?= $_GET['id'] ?>">Add</a></h3>
+    <?php if($fault->status == 'APPROVED' || $fault->status == 'PAID') : ?>
+    <h3 class="page-header">Replaced Parts 
+        <?php if($fault->status != 'PAID'): ?>
+            <a class="btn btn-primary pull-right" href="<?= SC_URL ?>admin/adddevicepart?id=<?= $_GET['id'] ?>">Add</a>
+        <?php endif; ?>
+    </h3>
     <table class="table">
         <thead>
             <tr>
@@ -61,7 +69,9 @@
                 <th>Description</th>
                 <th>Price (Rs)</th>
                 <th>Date</th>
-                <th>Option</th>
+                <?php if($fault->status != 'PAID'): ?>
+                    <th>Option</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
@@ -73,7 +83,9 @@
                 <td><?= $part->description ?></td>
                 <td><?= $part->price ?></td>
                 <td><?= $part->date ?></td>
-                <td><a href="<?= SC_URL ?>admin/deletedevicepart?sid=<?= $_GET['id'] ?>&id=<?= $part->id ?>">delete</a></td>
+                <?php if($fault->status != 'PAID'): ?>
+                    <td><a href="<?= SC_URL ?>admin/deletedevicepart?sid=<?= $_GET['id'] ?>&id=<?= $part->id ?>">delete</a></td>
+                <?php endif; ?>
             </tr>
             <?php endforeach;
             else : ?>

@@ -398,7 +398,7 @@ class Admin extends Controller {
         $engineers = null;
         $stat = $serModel->get_status('fault_repair', $_GET['id']);
 
-        if($stat->status != 'APPROVED') {
+        if($stat->status == 'REQUESTED') {
             $fault = $serModel->get_by_id('fault_repair', $_GET['id']);
             if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
 
@@ -481,90 +481,21 @@ class Admin extends Controller {
     }
     public function faultbill() {
         $serModel = $this->model('ServiceModel');
-        $str = '<html>
-            <head><title>bill</title></head>
-            <body style="background:#eee">
-                <div style="margin:auto;width:800px;background:#fff;padding:10px">
-                    <div style="padding:20px;overflow:hidden">
-                        <a href="'.SC_URL.'admin/viewfault?id='.$_GET['id'].'">< go back</a>
-                        <button onclick="window.print()" style="float:right;margin-left:20px">print</button>
-                    </div>
-                    <table style="width:100%;">
-                        <tr style="border-bottom:1px solid #ddd;">
-                            <td><image height="60" src="'.SC_URL.'img/logo.png" alt="Service Center"></td>
-                            <td></td>
-                            <td align="right">Date : '.date('Y-m-d').'</td>
-                        </tr>
-                    </table>';
-
         $stat = $serModel->get_status('fault_repair', $_GET['id']);
 
-        if($stat->status != 'APPROVED') {
-            $str .= "<p>Bill cannot be generated for non approved service</p>";
-        } else {
-            $fault = $serModel->get_by_id_approved('fault_repair', $_GET['id']);
-            if(isset($fault->error) && $fault->error) die('Error: '.$fault->message);
+        $service = $serModel->get_by_id_approved('fault_repair', $_GET['id']);
+        if(isset($service->error) && $service->error) die('Error: '.$fault->message);
 
-            $devModel = $this->model('DeviceModel');
-            $parts = $devModel->get_part_by_service_id($_GET['id']);
-            if(isset($parts->error) && $parts->error) die('Error: '.$parts->message);
+        $devModel = $this->model('DeviceModel');
+        $parts = $devModel->get_part_by_service_id($_GET['id']);
+        if(isset($parts->error) && $parts->error) die('Error: '.$parts->message);
 
-            $address = (isset($fault->alternative_address) && $fault->alternative_address!='')?$fault->alternative_address:$fault->address;
-            $phone = (isset($fault->alternative_phone) && $fault->alternative_phone!='')?$fault->alternative_phone:$fault->phone;
-            $total = $fault->price;
-
-            $str .= '<div style="padding:20px;border:1px solid #ccc;">
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Name: </strong>
-                        <span>'.$fault->customer_name.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Address: </strong>
-                        <span>'.$address.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Phone: </strong>
-                        <span>'.$phone.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Description: </strong>
-                        <span>'.$fault->description.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Requested Date: </strong>
-                        <span>'.$fault->requested_date.'</span>
-                    </div>
-                    <div style="margin-bottom:10px;">
-                        <strong style="display:inline-block;width:150px;">Device: </strong>
-                        <span>'.$fault->device_category_name.': '.$fault->brand_name.' '.$fault->serial_no.'('.$fault->date_of_purchase.')</span>
-                    </div>
-                </div>
-                <table style="width:100%;padding:10px;">
-                    <tr>
-                        <td align="right">Service Charge: </td>
-                        <td align="center">____________________</td>
-                        <td align="right">'.$fault->price.'</td>
-                    </tr>';
-            foreach($parts as $part) {
-                $str .= '<tr>
-                        <td align="right">'.$part->part_name.' </td>
-                        <td align="center">____________________</td>
-                        <td align="right">'.$part->price.'</td>
-                    </tr>';
-                $total += $part->price;
-            }
-            $str .= '<tr>
-                    <td></td>
-                    <td align="right"><strong>TOTAL:</strong></td>
-                    <td align="right"><strong>'.number_format($total,2).'</strong></td>
-                </tr>
-            </table>';
-        }
-
-        $str .= '    </div>
-            </body>
-        </html>';
-        echo $str;
+        $this->view('admin/billtemplate',array(
+            'page' => 'viewfault',
+            'status' => $stat->status,
+            'service' => $service,
+            'parts' => $parts
+        ));
     }
 
     /**
@@ -837,104 +768,5 @@ class Admin extends Controller {
             </html>';
             die($str);
         }
-
-        /* here bill created based on each fault and include service charge & parts replacement */
-        $serModel = $this->model('ServiceModel');
-        $str = '<html>
-            <head><title>bill</title></head>
-            <body style="background:#eee">
-                <div style="margin:auto;width:800px;background:#fff;padding:10px">
-                    <div style="padding:20px;overflow:hidden">
-                        <a href="'.SC_URL.'admin/viewmaintain?id='.$_GET['id'].'">< go back</a>
-                        <button onclick="window.print()" style="float:right;margin-left:20px">print</button>
-                    </div>
-                    <table style="width:100%;">
-                        <tr style="border-bottom:1px solid #ddd;">
-                            <td><image height="60" src="'.SC_URL.'img/logo.png" alt="Service Center"></td>
-                            <td></td>
-                            <td align="right">Date : '.date('Y-m-d').'</td>
-                        </tr>
-                    </table>';
-
-        $stat = $serModel->get_status('maintenance', $_GET['id']);
-
-        if($stat->status != 'APPROVED') {
-            $str .= "<p>Bill cannot be generated for non approved service</p>";
-        } else {
-            $service = $serModel->get_by_id('maintenance', $_GET['id']);
-            if(isset($service->error) && $service->error) die('Error: '.$service->message);
-
-            $devModel = $this->model('DeviceModel');
-            $parts = $devModel->get_part_by_service_id($_GET['id']);
-            if(isset($parts->error) && $parts->error) die('Error: '.$parts->message);
-
-            $address = (isset($service->alternative_address) && $service->alternative_address!='')?$service->alternative_address:$service->address;
-            $phone = (isset($service->alternative_phone) && $service->alternative_phone!='')?$service->alternative_phone:$service->phone;
-            $total = $service->price;
-
-            $date = strtotime($service->requested_date);
-            $startdate = date('d F Y', $date);
-            $enddate = date('d F Y', strtotime($startdate.' + '.(365*$service->duration).' days'));
-
-            $str .= '<div style="padding:20px;border:1px solid #ccc;">
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Name: </strong>
-                        <span>'.$service->customer_name.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Address: </strong>
-                        <span>'.$address.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Phone: </strong>
-                        <span>'.$phone.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Description: </strong>
-                        <span>'.$service->description.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Start Date: </strong>
-                        <span>'.$startdate.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">End Date: </strong>
-                        <span>'.$enddate.'</span>
-                    </div>
-                    <div>
-                        <strong style="display:inline-block;width:150px;">Duration: </strong>
-                        <span>'.$service->duration.' Year\'s</span>
-                    </div>
-                    <div style="margin-bottom:10px;">
-                        <strong style="display:inline-block;width:150px;">Device: </strong>
-                        <span>'.$service->device_category_name.': '.$service->brand_name.' '.$service->serial_no.'('.$service->date_of_purchase.')</span>
-                    </div>
-                </div>
-                <table style="width:100%;padding:10px;">
-                    <tr>
-                        <td align="right">Subscription Fee: </td>
-                        <td align="center">____________________</td>
-                        <td align="right">'.$service->price.'</td>
-                    </tr>';
-            foreach($parts as $part) {
-                $str .= '<tr>
-                        <td align="right">'.$part->part_name.' </td>
-                        <td align="center">____________________</td>
-                        <td align="right">'.$part->price.'</td>
-                    </tr>';
-                $total += $part->price;
-            }
-            $str .= '<tr>
-                    <td></td>
-                    <td align="right"><strong>TOTAL:</strong></td>
-                    <td align="right"><strong>'.number_format($total,2).'</strong></td>
-                </tr>
-            </table>';
-        }
-
-        $str .= '    </div>
-            </body>
-        </html>';
-        die($str);
     }
 }

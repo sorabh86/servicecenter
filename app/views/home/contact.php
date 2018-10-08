@@ -8,7 +8,7 @@
 					<h3>Leave a Message</h3>
 				</div>
 				<div class="panel-body">
-					<form action="" method="POST" role="form" class="form-horizontal">
+					<form name="contact-form" action="" method="POST" role="form" class="form-horizontal">
 						<div class="form-group">
 							<label for="name" class="control-label col-md-3">Name :</label>
 							<div class="col-md-9">  
@@ -20,12 +20,6 @@
 							<div class="col-md-9">  
 								<input name="phone" type="text" class="form-control" id="phone" placeholder="Your Phone No" required>
 							</div> 
-						</div>
-						<div class="form-group">
-							<label for="email" class="control-label col-md-3">email :</label>
-							<div class="col-md-9">  
-							<input type="text" class="form-control" id="email" name="email" placeholder="Your email" required>
-						</div>
 						</div>
 						<div class="form-group">
 							<label for="message" class="control-label col-md-3">Message :</label>

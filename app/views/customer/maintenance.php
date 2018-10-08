@@ -31,7 +31,7 @@
                     <td><?= $service->device_name ?> (<a href="<?= SC_URL ?>customer/editdevice?id=<?= $service->id ?>"><?= $service->id ?></a>)</td>
                     <!-- <td><?= $service->alternative_address ?></td>
                     <td><?= $service->alternative_phone ?></td> -->
-                    <td><?= $service->status ?></td>
+                    <td class="<?=($service->status=='REQUESTED')?'alert alert-info':(($service->status=='PAID')?'alert alert-success':'alert alert-warning') ?>"><?= $service->status ?></td>
                     <td><?= $service->requested_date ?></td>
                     <td><a href="">view</a></td>
                 </tr>

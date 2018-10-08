@@ -40,7 +40,29 @@
     var $loginForm = $(document.forms['customer-login']);
     var $changePassword = $(document.forms['change-password']);
     var $bookAppForm = $(document.forms['book-appointment']);
+    var $contactForm = $(document.forms['contact-form']);
     
+    if($contactForm) {
+        $contactForm.validate({
+            rules: {
+                name : {
+                    minlength:6
+                }, phone : {
+                    number:true,
+                    required:true,
+                    minlength:10
+                }, message : {
+                    minlength:12
+                }
+            },
+            messages: {
+                phone: {
+                    required: "We need your phone number to contact you",
+                    minlength: jQuery.validator.format("At least {0} characters required!")
+                }
+            }
+        })
+    }
     if($registerForm) {
         $registerForm.validate({
             rules: {

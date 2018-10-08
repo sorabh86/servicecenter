@@ -20,7 +20,7 @@
 					<td><?= $fault->id ?></td>
 					<td><?= $fault->customer_name ?> (<a href="<?= SC_URL ?>admin/viewcustomer?id=<?= $fault->customer_id ?>"><?= $fault->customer_id ?></a>)</td>
 					<td><?= $fault->device_name ?> (<a href="<?= SC_URL ?>admin/editdevice?id=<?= $fault->id ?>"><?= $fault->id ?></a>)</td>
-					<td><?= $fault->status ?></td>
+					<td class="<?=($fault->status=='REQUESTED')?'alert alert-info':(($fault->status=='PAID')?'alert alert-success':'alert alert-warning') ?>"><?= $fault->status ?></td>
 					<td><?= $fault->requested_date ?></td>
 					<td><a href="<?= SC_URL ?>admin/viewfault?id=<?= $fault->id ?>">view</a></td>
 				</tr>

@@ -25,7 +25,7 @@
 					</div>
 					<div class="col-md-6">
 						<h2 class="title">More About Us</h2>
-						<p>We Provide Proffesional Service.
+						<p>We Provide Profesional Service.
 						Orem Ipsum is simply dummy text of the printing and typesetting industry. typesetting, loremIpsum has been the industry's</p>
 						<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. typesetting, loremIpsum has been the industry's. There are many variations of lorem passagei of Lorem Ipsum available but the majority have.</p>
 						<a href="#" class="btn btn-border btn-border-white">More About</a>

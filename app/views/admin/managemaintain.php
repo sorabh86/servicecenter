@@ -20,7 +20,7 @@
 						<td><?= $service->id ?></td>
 						<td><?= $service->customer_name ?> (<a href="<?= SC_URL ?>admin/viewcustomer?id=<?= $service->customer_id ?>"><?= $service->customer_id ?></a>)</td>
 						<td><?= $service->device_name ?> (<a href="<?= SC_URL ?>admin/editdevice?id=<?= $service->id ?>"><?= $service->id ?></a>)</td>
-						<td><?= $service->status ?></td>
+						<td class="<?=($service->status=='REQUESTED')?'alert alert-info':(($service->status=='PAID')?'alert alert-success':'alert alert-warning') ?>"><?= $service->status ?></td>
 						<td><?= $service->requested_date ?></td>
 						<td><?= $service->duration ?></td>
 						<td><a href="<?= SC_URL ?>admin/viewmaintain?id=<?= $service->id ?>">view</a></td>
