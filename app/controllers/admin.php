@@ -362,6 +362,7 @@ class Admin extends Controller {
         ));
         $this->view('admin/layout/footer');
     }
+
     public function addfault() {
         
         if(isset($_POST['submit'])) {
@@ -383,11 +384,17 @@ class Admin extends Controller {
         ));
         $this->view('admin/layout/footer');
     }
+
     public function viewfault() {
         if(!isset($_GET['id']))
             $this->redirect('admin/managefault');
         
         $serModel = $this->model('ServiceModel');
+
+        // change status to paid
+        if(isset($_POST['submit-paid'])) {
+            $serModel->set_status($_POST);
+        }
 
         // assign engineer, service charge and give approval
         if(isset($_POST['submit-approve'])) {
@@ -448,6 +455,7 @@ class Admin extends Controller {
         $this->view('admin/adddevicepart',array('page'=>$page));
         $this->view('admin/layout/footer');
     }
+
     public function deletedevicepart() {
         if(isset($_GET['id'])) {
 
@@ -468,6 +476,7 @@ class Admin extends Controller {
             exit();
         }
     }
+
     public function rejectfault() {
         if(isset($_GET['id'])) {
             $serModel = $this->model('ServiceModel');
@@ -479,6 +488,7 @@ class Admin extends Controller {
         $this->redirect('admin/managefault');
         exit();
     }
+
     public function faultbill() {
         $serModel = $this->model('ServiceModel');
         $stat = $serModel->get_status('fault_repair', $_GET['id']);
@@ -548,9 +558,11 @@ class Admin extends Controller {
             $this->redirect('admin/managefault');
 
         $serModel = $this->model('ServiceModel');
+
         // assign engineer, service charge and give approval
         if(isset($_POST['submit-approve'])) {
             $serModel->maintain_approve($_POST);
+            if($stat->error) die('#Error: '.$stat->message.' <a href="'.SC_URL.'admin/viewmaintain?id='.$_GET['id'].'">go back</a>');
         }
 
         $parts = null;
@@ -561,6 +573,12 @@ class Admin extends Controller {
         
         $devModel = $this->model('DeviceModel');
         $parts = $devModel->get_part_by_service_id($_GET['id']);
+
+        // change status to paid
+        if(isset($_POST['submit-part'])) {
+            $stat = $devModel->set_status($_POST);
+            if($stat->error) die('#Error: '.$stat->message.' <a href="'.SC_URL.'admin/viewmaintain?id='.$_GET['id'].'">go back</a>');
+        }
         
         $this->view('admin/layout/header');
         $this->view('admin/viewmaintain',array(

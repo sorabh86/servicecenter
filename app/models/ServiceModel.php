@@ -48,6 +48,20 @@ class ServiceModel {
             return (object)array('error' => true,'message' => $e->getMessage());
         }
     }
+
+    public function set_status($post) {
+        try {
+            $stmt=$this->db->prepare('UPDATE services SET status=? WHERE id=?');
+            $stmt->execute(array(
+                $post['status'],
+                $post['id']
+            ));
+            return $stmt->fetch();
+        } catch(PDOException $e) {
+            return (object)array('error' => true,'message' => $e->getMessage());
+        }
+    }
+    
     public function get_by_id($type, $id) {
         try {
             $stmt=$this->db->prepare('SELECT S.*, D.customer_id, C.name AS customer_name,

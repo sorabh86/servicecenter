@@ -20,7 +20,7 @@
                 <th>Alternative Phone</th> -->
                 <th>Status</th>
                 <th>Date of Request</th>
-                <th>options</td>
+                <!-- <th>options</td> -->
             </tr>
         </thead>
         <tbody>
@@ -33,7 +33,7 @@
                     <td><?= $service->alternative_phone ?></td> -->
                     <td class="<?=($service->status=='REQUESTED')?'alert alert-info':(($service->status=='PAID')?'alert alert-success':'alert alert-warning') ?>"><?= $service->status ?></td>
                     <td><?= $service->requested_date ?></td>
-                    <td><a href="">view</a></td>
+                    <!-- <td><a href="">view</a></td> -->
                 </tr>
             <?php endforeach;
             else : ?>

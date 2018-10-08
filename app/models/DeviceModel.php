@@ -133,6 +133,20 @@ class DeviceModel {
             return (object)array('error'=>true,'message'=>$e->getMessage());
         }
     }
+
+    public function set_status($post) {
+        try {
+            $stmt = $this->db->prepare('UPDATE device_parts SET status=? WHERE id=?');
+            $stmt->execute(array(
+                $post['status'],
+                $post['id']
+            ));
+            return (object)array('error'=>false,'message'=>'Successful');
+        } catch(PDOException $e) {
+            return (object)array('error'=>true,'message'=>$e->getMessage());
+        }
+    }
+
     public function insert_part($post) {
         try {
             $stmt = $this->db->prepare('INSERT INTO device_parts (service_id,part_name,description,price,date) VALUES (?,?,?,?,NOW())');

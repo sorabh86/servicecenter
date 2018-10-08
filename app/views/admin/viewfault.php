@@ -1,11 +1,15 @@
 <?php $fault = $data['fault'];
+$total = $fault->price;
+foreach ($data['parts'] as $part) {
+    $total += $part->price;
+}
 // echo '<pre>'; print_r($fault); echo '</pre>'; ?>
 <div class="container" style="margin-bottom:40px;">
     <h2 class="page-header">
         <a href="<?= SC_URL ?>admin/managefault" class="btn btn-default">&lt; go back</a>
         <span style="margin-left:40px">Fault Request Details</span>
         <?php if($fault->status=='PAID'): ?>
-            <span class="alert alert-info pull-right" >PAID</span>
+            <span class="alert-info pull-right" >PAID</span>
         <?php else: ?>
             <a class="btn btn-warning pull-right" href="<?= SC_URL ?>admin/faultbill?id=<?= $_GET['id'] ?>">Generate Bill</a>
         <?php endif; ?>
@@ -51,13 +55,23 @@
                 <div class="alert alert-info">
                     <p><strong class="col-md-5 text-right">Service Charge: </strong> Rs.<?= $fault->price ?></p>
                     <p><strong class="col-md-5 text-right">Engineer Name: </strong> <?= $fault->engineer_name ?></p>
+                    <?php if($fault->status == 'APPROVED') : ?>
+                        <br>
+                        <form action="" method="POST">
+                            <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                            <input type="hidden" name="status" value="PAID">
+                            <button name="submit-paid" type="submit" class="btn btn-success" >Paid</button>
+                        <form>
+                    <?php elseif($fault->status == 'PAID') : ?>
+                        <p class="btn-lg bg-warning"><strong>Total Amount: </strong> <?= number_format($total,2,'.','') ?></p>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
     </div>
     <?php if($fault->status == 'APPROVED' || $fault->status == 'PAID') : ?>
     <h3 class="page-header">Replaced Parts 
-        <?php if($fault->status != 'PAID'): ?>
+        <?php if($fault->status == 'APPROVED'): ?>
             <a class="btn btn-primary pull-right" href="<?= SC_URL ?>admin/adddevicepart?id=<?= $_GET['id'] ?>">Add</a>
         <?php endif; ?>
     </h3>
