@@ -240,5 +240,18 @@
         $addMaintenanceForm.find('.price').html(price+' X '+duration+' = <strong>'+(price*duration)+'</strong>');
     });
 
+
+    /* pagination related code */
+    var $paginationForm = $(document.forms['pagination-form']);
+    $paginationForm.find('[name="limit"]').on('change',function(){
+        $paginationForm.submit();
+    });
+    $('.page-change').on('click', function() {
+        var form = document.forms['pagination-form'];
+        form.offset.value = parseInt($(this).html())-1;
+        $(form).submit();
+        
+        return false;
+    });
 })(jQuery);
 

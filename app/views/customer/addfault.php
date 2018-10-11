@@ -2,15 +2,22 @@
     <h1 class="page-header">Request Fault</h1>
     <form action="" method="POST" role="form">
         <input type="hidden" name="type" value="fault_repair">
-        <div class="form-group">
-            <label>Product/Device :</label>
+        <div class="form-group row">
             <?php if(isset($data['devices'])) : ?>
-                <select class="form-control" name="device_id">
-                    <?php foreach($data['devices'] as $device): ?>
-                        <option value="<?= $device->id ?>"><?= $device->device_category_name.' : '.$device->brand_name.' '.$device->serial_no ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="col-md-9">
+                    <label>Product/Device :</label>
+                    <select class="form-control" name="device_id">
+                        <?php foreach($data['devices'] as $device): ?>
+                            <option value="<?= $device->id ?>"><?= $device->device_category_name.' : '.$device->brand_name.' '.$device->serial_no ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label style="margin:5px 25px 5px 5px;padding:15px" class="alert-danger">OR</label>
+                    <a class="btn btn-success" href="<?= SC_URL ?>customer/adddevice">Add New Device</a>
+                </div>
             <?php else : ?>
+                <label>Product/Device :</label>
                 <div class="alert alert-info">
                     No Product/Device found, Please Add your device from <strong><a href="<?= SC_URL ?>customer/devices">here</a></strong>, then come back to add your repair request.  
                 </div>

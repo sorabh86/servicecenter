@@ -1,5 +1,6 @@
 <?php $fault = $data['fault'];
 $total = $fault->price;
+if(isset($data['parts']))
 foreach ($data['parts'] as $part) {
     $total += $part->price;
 }

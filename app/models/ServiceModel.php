@@ -16,7 +16,8 @@ class ServiceModel {
             INNER JOIN devices P ON P.id=FS.device_id
             INNER JOIN customers C ON C.id=P.customer_id
             INNER JOIN device_category PC ON PC.id=P.device_category_id 
-            WHERE FS.type=?');
+            WHERE FS.type=?
+            ORDER BY FS.id DESC');
             $stmt->execute(array($type));
             return $stmt->fetchAll();
         } catch (PDOException $e) {
@@ -88,7 +89,8 @@ class ServiceModel {
             INNER JOIN device_category DC ON DC.id=D.device_category_id  
             INNER JOIN customers C ON C.id=D.customer_id  
             INNER JOIN engineers E ON E.id=S.engineer_id
-             WHERE S.type=? AND S.id=?');
+             WHERE S.type=? AND S.id=?
+             ORDER BY S.id DESC');
             $stmt->execute(array($type, $id));
             return $stmt->fetch();
         } catch(PDOException $e) {
@@ -116,7 +118,8 @@ class ServiceModel {
             INNER JOIN devices P ON FS.device_id=P.id
             INNER JOIN customers C ON P.customer_id=C.id 
             INNER JOIN device_category PC ON PC.id=P.device_category_id 
-            WHERE type=? AND C.id=?');
+            WHERE type=? AND C.id=?
+            ORDER BY FS.id DESC');
             $stmt->execute(array($type, $customer_id));
             return $stmt->fetchAll();
         } catch (PDOException $e) {
@@ -191,8 +194,8 @@ class ServiceModel {
                 $post['alternative_address'],
                 $post['alternative_phone'],
                 $post['description'],
-                $post['price'],
-                $post['duration'],
+                isset($post['price'])?$post['price']:'',
+                isset($post['duration'])?$post['duration']:'',
                 'REQUESTED'
             ));
             return (object)array(

@@ -10,9 +10,11 @@ class DeviceModel {
 
     public function get_devices() {
         try {
-            $stmt = $this->db->prepare('SELECT P.*, C.name AS customer_name, PD.name AS device_category_name FROM devices P 
+            $stmt = $this->db->prepare('SELECT P.*, C.name AS customer_name, 
+                PD.name AS device_category_name FROM devices P 
                 INNER JOIN customers C ON P.customer_id=C.id 
-                INNER JOIN device_category PD ON P.device_category_id=PD.id');
+                INNER JOIN device_category PD ON P.device_category_id=PD.id
+                ORDER BY P.id DESC');
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $e) {
@@ -28,8 +30,42 @@ class DeviceModel {
                 PD.name AS device_category_name FROM devices P
                 INNER JOIN customers C ON P.customer_id=C.id
                 INNER JOIN device_category PD ON P.device_category_id=PD.id
-                WHERE customer_id=?');
+                WHERE customer_id=?
+                ORDER BY P.id DESC');
             $stmt->execute(array($id));
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return (object)array(
+                'error' => true,
+                'message' => $e->getMessage() 
+            );
+        }
+    }
+    public function get_total_page_by_customer_id() {
+        try {
+            $stmt = $this->db->query('SELECT count(*) AS c FROM devices');
+            return $stmt->fetch()->c;
+        } catch(PDOException $e) {
+            return (object)array(
+                'error' => true,
+                'message' => $e->getMessage() 
+            );
+        }
+    }
+    public function get_pagination_by_customer_id($arr) {
+        try {
+            $stmt = $this->db->prepare('SELECT P.*, C.name AS customer_name,
+                PD.name AS device_category_name FROM devices P
+                INNER JOIN customers C ON P.customer_id=C.id
+                INNER JOIN device_category PD ON P.device_category_id=PD.id
+                WHERE customer_id=:id
+                ORDER BY P.id DESC 
+                LIMIT :limit OFFSET :offset');
+            
+            $stmt->bindValue(':id', $arr['id']);
+            $stmt->bindValue(':limit', (int)$arr['limit'], PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$arr['offset'], PDO::PARAM_INT);
+            $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $e) {
             return (object)array(

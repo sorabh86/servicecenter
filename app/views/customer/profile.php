@@ -1,5 +1,5 @@
 <div class="container">
-    <a class="btn btn-default btn-back" href="<?= SC_URL ?>customer">back</a>
+    <a class="btn btn-default btn-back" href="<?= SC_URL ?>customer"><span class="glyphicon glyphicon-arrow-left"></span> back</a>
     <h1 class="page-header">Your Profile</h1>
     <ul class="list-group">
         <li class="list-group-item"><strong>Username:</strong> <?= $_SESSION['user']->username ?></li>

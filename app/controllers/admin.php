@@ -50,17 +50,15 @@ class Admin extends Controller {
         if(isset($_SESSION['admin']))
             unset($_SESSION['admin']);
 
-        $this->redirect([
-            "url" => 'admin/login',
-            "title" => "Success",
-            "message" => "You are Logged out"
-        ]);
+        $this->redirect('admin/login');
     }
 
     /**
      * Manage Category of devices that organization repairs
      */
     public function managecategory() {
+        $this->checklogin();
+        
         $catModel = $this->model('CategoryModel');
 
         if(isset($_POST['submit'])) {
@@ -81,12 +79,10 @@ class Admin extends Controller {
         ));
         $this->view('admin/layout/footer');
     }
-    public function addcategory() {
-        
-        // $this->redirect('admin/managecategory');
-        exit();
-    }
+
     public function deletecategory() {
+        $this->checklogin();
+        
         if(isset($_GET['id'])) {
             $catModel = $this->model('CategoryModel');
             $catModel->delete_by_id($_GET['id']);
@@ -99,6 +95,8 @@ class Admin extends Controller {
      * Manage devices or device added by customer or added by admin
      */
     public function managedevice() {
+        $this->checklogin();
+        
         $prodModel = $this->model('DeviceModel');
         $devices = $prodModel->get_devices();
 
@@ -112,6 +110,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function adddevice() {
+        $this->checklogin();
+        
         $post = $_POST;
         if(isset($post['submit'])) {
             $prodModel = $this->model('DeviceModel');
@@ -139,6 +139,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function editdevice() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin/managedevice');
 
@@ -170,6 +172,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function deletedevice() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin/managedevice');
         
@@ -188,6 +192,8 @@ class Admin extends Controller {
      * Manage customers
      */
     public function managecustomer() {
+        $this->checklogin();
+        
         $custModel = $this->model('CustomerModel');
         $customers = $custModel->get_customers();
 
@@ -201,6 +207,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function viewcustomer() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin/managecustomer');
 
@@ -225,6 +233,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function addcustomer() {
+        $this->checklogin();
+        
         if(isset($_POST['submit'])) {
             $custModel = $this->model('CustomerModel');
             $status = $custModel->insert_customer($_POST);
@@ -242,6 +252,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function editcustomer() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin/managecustomer');
 
@@ -272,6 +284,8 @@ class Admin extends Controller {
      * Manage engineers
      */
     public function manageengineer() {
+        $this->checklogin();
+        
         $engModel = $this->model('EngineerModel');
         $engineers = $engModel->get_engineers();
 
@@ -285,6 +299,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function addengineer() {
+        $this->checklogin();
+        
         if(isset($_POST['submit'])) {
             $engModel = $this->model('EngineerModel');
             $engineer = $engModel->insert_engineer($_POST);
@@ -307,6 +323,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function editengineer() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin/manageengineer');
         
@@ -329,6 +347,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function deleteengineer() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin/manageengineer');
 
@@ -350,6 +370,8 @@ class Admin extends Controller {
      * Manage Fault Request
      */
     public function managefault() {
+        $this->checklogin();
+        
         $serviceModel = $this->model('ServiceModel');
         $faults = $serviceModel->get_services('fault_repair');
 
@@ -364,6 +386,7 @@ class Admin extends Controller {
     }
 
     public function addfault() {
+        $this->checklogin();
         
         if(isset($_POST['submit'])) {
             $serModel = $this->model('ServiceModel');
@@ -386,6 +409,8 @@ class Admin extends Controller {
     }
 
     public function viewfault() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin/managefault');
         
@@ -428,6 +453,8 @@ class Admin extends Controller {
         $this->view('admin/layout/footer');
     }
     public function adddevicepart() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin');
 
@@ -446,7 +473,8 @@ class Admin extends Controller {
         if(isset($_POST['submit'])) {
             $devModel = $this->model('DeviceModel');
             $stat = $devModel->insert_part($_POST);
-            if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/viewfault?id='.$_GET['id'].'" >goback</a>');
+            if($stat->error) 
+                die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/viewfault?id='.$_GET['id'].'" >goback</a>');
             $this->redirect('admin/'.$redpage.'?id='.$_GET['id']);
             exit();
         }
@@ -457,6 +485,8 @@ class Admin extends Controller {
     }
 
     public function deletedevicepart() {
+        $this->checklogin();
+        
         if(isset($_GET['id'])) {
 
             $serModel = $this->model('ServiceModel');
@@ -470,7 +500,8 @@ class Admin extends Controller {
 
             $devModel = $this->model('DeviceModel');
             $stat = $devModel->delete_part_by_id($_GET['id']);
-            if($stat->error) die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/'.$redpage.'?id='.$_GET['sid'].'" >goback</a>');
+            if($stat->error) 
+                die('Error: '.$stat->message.'. <a href="'.SC_URL.'admin/'.$redpage.'?id='.$_GET['sid'].'" >goback</a>');
             
             $this->redirect('admin/'.$redpage.'?id='.$_GET['sid']);
             exit();
@@ -478,18 +509,21 @@ class Admin extends Controller {
     }
 
     public function rejectfault() {
+        $this->checklogin();
+        
         if(isset($_GET['id'])) {
             $serModel = $this->model('ServiceModel');
             $status = $serModel->reject($_GET['id']);
-            if($status->error) {
+            if(isset($status->error) && $status->error) 
                 die('#Error: '.$status->message.' occured: go back <a href="'.SC_URL.'admin">here</a>');
-            }
         }
         $this->redirect('admin/managefault');
         exit();
     }
 
     public function faultbill() {
+        $this->checklogin();
+        
         $serModel = $this->model('ServiceModel');
         $stat = $serModel->get_status('fault_repair', $_GET['id']);
 
@@ -512,9 +546,11 @@ class Admin extends Controller {
      * Manage maintenance services
      */
     public function managemaintain() {
+        $this->checklogin();
+        
         $serviceModel = $this->model('ServiceModel');
         $services = $serviceModel->get_services('maintenance');
-        if(isset($services->error) && $services->error) die('Error:'.$services->message.'. <a href="">go back</a>');
+        if(isset($services->error) && $services->error) die('Error:'.$services->message.'. <a href="admin/managemaintain">go back</a>');
 
         $this->view('admin/layout/header');
         $this->view('admin/layout/sidelink', array(
@@ -527,6 +563,8 @@ class Admin extends Controller {
     }
 
     public function addmaintain() {
+        $this->checklogin();
+        
         if(isset($_POST['submit'])) {
             $serviceModel = $this->model('ServiceModel');
             $_POST['alternative_address'] = '';
@@ -544,6 +582,7 @@ class Admin extends Controller {
         $engModel = $this->model('EngineerModel');
         $device_category_id = $devices[0]->device_category_id;
         $engineers = $engModel->get_by_device_category_id($device_category_id);
+        if($engineers->error) die('#Error: '.$engineers->message.' <a href="'.SC_URL.'admin/managemaintain">go back</a>');
 
         $this->view('admin/layout/header');
         $this->view('admin/addmaintain',array(
@@ -554,6 +593,8 @@ class Admin extends Controller {
     }
 
     public function viewmaintain() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('admin/managefault');
 
@@ -589,18 +630,20 @@ class Admin extends Controller {
     }
 
     public function rejectmaintain() {
+        $this->checklogin();
+        
         if(isset($_GET['id'])) {
             $serModel = $this->model('ServiceModel');
             $status = $serModel->reject($_GET['id']);
-            if($status->error) {
-                die('#Error: '.$status->message.' occured: go back <a href="'.SC_URL.'admin">here</a>');
-            }
+            if(isset($status->error) && $status->error) die('#Error: '.$status->message.' occured: go back <a href="'.SC_URL.'admin">here</a>');
         }
         $this->redirect('admin/managemaintain');
         exit();
     }
     
     public function maintainbill() {
+        $this->checklogin();
+        
         /* generate bill for only selected parts */
         if(isset($_POST['part-submit'])) {
             $id = $_GET['id'];

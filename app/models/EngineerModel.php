@@ -12,7 +12,8 @@ class EngineerModel {
                 expertise FROM `engineers` E
                 INNER JOIN `engineers_expertise` EE ON E.id=EE.engineer_id
                 INNER JOIN device_category PC ON EE.device_category_id=PC.id
-                GROUP BY E.id');
+                GROUP BY E.id
+                ORDER BY E.id DESC');
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $e) {

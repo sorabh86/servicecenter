@@ -6,10 +6,22 @@
 
 class Customer extends Controller {
 
+    /**
+     * Dashboard for customer
+     */
     public function index() {
+        $this->checklogin();
+
         $this->view('layouts/header');
         $this->view('customer/index');
         $this->view('layouts/footer');
+    }
+
+    private function checklogin() {
+        if(!isset($_SESSION['user'])) {
+            $this->redirect('customer/login');
+            exit();
+        }
     }
 
     public function register() {
@@ -78,11 +90,15 @@ class Customer extends Controller {
     }
 
     public function profile() {
+        $this->checklogin();
+        
         $this->view("layouts/header");
         $this->view("customer/profile");
         $this->view("layouts/footer");
     }
     public function editprofile() {
+        $this->checklogin();
+        
         if(isset($_POST['submit'])) {
             $customerModel = $this->model('CustomerModel');
             $stat = $customerModel->update_customer($_POST);
@@ -100,6 +116,8 @@ class Customer extends Controller {
         $this->view("layouts/footer");
     }
     public function changepassword() {
+        $this->checklogin();
+        
         if(isset($_POST['submit'])) {
             $customerModel = $this->model('CustomerModel');
             $stat = $customerModel->change_password($_POST);
@@ -117,17 +135,41 @@ class Customer extends Controller {
      * Manage customer devices
      */
     public function devices() {
+        $this->checklogin();
+        
+        $limit = 10;
+        $offset = 0;
+        if(isset($_POST['limit']) && !empty($_POST['limit'])) 
+            (int)$limit = $_POST['limit'];
+        if(isset($_POST['offset']) && !empty($_POST['offset'])) 
+            (int)$limit = $_POST['offset'];
+
         $customer_id = $_SESSION['user']->id;
         $devModel = $this->model('DeviceModel');
-        $devices = $devModel->get_by_customer_id($customer_id);
+        // $devices = $devModel->get_by_customer_id($customer_id);
+        $devices = $devModel->get_pagination_by_customer_id(array(
+            'id' => $customer_id,
+            'limit' => $limit,
+            'offset' => $offset
+        ));
 
+        $totalRow = $devModel->get_total_page_by_customer_id();
+        $totalPage = ($totalRow<$limit)?1:ceil($totalRow/$limit);
+        $currentPage = $offset+1;
+        // echo $totalPage, $currentPage;
+        
         $this->view("layouts/header");
         $this->view("customer/devices",array(
-            'devices' => $devices
+            'devices' => $devices,
+            'totalPages' => $totalPage,
+            'currentPage' => $currentPage,
+            'limit' => $limit
         ));
         $this->view("layouts/footer");
     }
     public function adddevice() {
+        $this->checklogin();
+        
         if(isset($_POST['submit'])) {
             $devModel = $this->model('DeviceModel');
             $devModel->insert_device($_POST);
@@ -147,6 +189,8 @@ class Customer extends Controller {
         $this->view("layouts/footer");
     }
     public function editdevice() {
+        $this->checklogin();
+        
         if(!isset($_GET['id']))
             $this->redirect('customer/devices');
 
@@ -176,9 +220,8 @@ class Customer extends Controller {
      * Manage customer fault Service Request
      */
     public function faultservice() {
-        if(!isset($_SESSION['user']))
-            $this->redirect('customer/login');
-        
+        $this->checklogin();
+                
         $serviceModel = $this->model('ServiceModel');
         $services = $serviceModel->get_by_customer_id('fault_repair',$_SESSION['user']->id);
         
@@ -189,10 +232,12 @@ class Customer extends Controller {
         $this->view("layouts/footer");
     }
     public function addfault() {
+        $this->checklogin();
+        
         if(isset($_POST['submit'])) {
             $serviceModel = $this->model('ServiceModel');
-            $status = $serviceModel->request_service($_POST);
-            // echo $status->message;
+            $stat = $serviceModel->request_service($_POST);
+            if(isset($stat->error) && $stat->error) die('#Error'.$stat->message.'. <a href="'.SC_URL.'customer/addfault">go back</a>');
             $this->redirect('customer/faultservice');
         }
 
@@ -210,9 +255,8 @@ class Customer extends Controller {
      * Manage customer maintenance services
      */
     public function maintenance() {
-        if(!isset($_SESSION['user']))
-            $this->redirect('customer/login');
-        
+        $this->checklogin();
+                
         $serviceModel = $this->model('ServiceModel');
         $services = $serviceModel->get_by_customer_id('maintenance', $_SESSION['user']->id);
 
@@ -224,6 +268,8 @@ class Customer extends Controller {
     }
 
     public function addmaintenance() {
+        $this->checklogin();
+        
         if(isset($_POST['submit'])) {
             $serviceModel = $this->model('ServiceModel');
             $status = $serviceModel->request_service($_POST);

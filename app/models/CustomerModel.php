@@ -88,7 +88,7 @@ class CustomerModel {
     
     public function get_customers() {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM customers");
+            $stmt = $this->db->prepare("SELECT * FROM customers ORDER BY id DESC");
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $e) {
