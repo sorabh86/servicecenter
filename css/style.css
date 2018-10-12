@@ -128,7 +128,7 @@ form[name=book-appointment] .nav-tabs {
 #home-carousal .carousel-caption {
 	top: 50%;
 	background: rgba(0, 0, 0, 0.3);
-	box-shadow: 0 0 70px rgba(0, 0, 0, 0.6);
+	/* box-shadow: 0 0 70px rgba(0, 0, 0, 0.6); */
 	padding: 40px 20px;
 	border-radius: 50px;
 	transform: translateY(-50%);
