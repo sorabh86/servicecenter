@@ -1,4 +1,7 @@
 <?php
+/**
+ * This Model dedicated to get information related to Device Category
+ */
 
 class CategoryModel {
 

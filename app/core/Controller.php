@@ -1,7 +1,7 @@
 <?php 
 
 /**
-* 
+* This class help to provide a standard base to all of our controllers
 */
 class Controller
 {

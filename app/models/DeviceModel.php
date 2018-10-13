@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Details of Device and related information 
+ */
 
 class DeviceModel {
     protected $db;

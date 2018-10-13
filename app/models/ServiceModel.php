@@ -1,4 +1,7 @@
 <?php
+/**
+ * Service request, fault repair data managed by this model
+ */
 
 class ServiceModel {
 

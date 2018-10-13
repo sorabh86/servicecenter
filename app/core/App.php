@@ -1,7 +1,8 @@
 <?php 
 
 /**
-* 
+* This file provide basic functionality for url parsing
+ * This files help over all system to distribute url params to load subsequent controllers
 */
 class App
 {

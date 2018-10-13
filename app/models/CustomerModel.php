@@ -1,4 +1,7 @@
 <?php
+/**
+ * All customer related data will be handle by this model
+ */
 
 class CustomerModel {
 

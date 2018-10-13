@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ * This model only contains hardcorded values for administrator
  */
 class AdminModel {
     

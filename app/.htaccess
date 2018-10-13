@@ -1,1 +1,2 @@
+# by default server index available file & folder list in web browser but using minus Indexes it just stop that behaviour
 Options -Indexes
