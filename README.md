@@ -1,7 +1,12 @@
 # Service Center Management System
 
-Project for online Repair & Maintenance Services       
+This is a mini-project submitted for MCA
+- Course : MCSP044
+- Title : Online Maintanence Management System
 
+Project is providing online booking for Repair & Maintenance Services for home appliances.       
+
+### Technologies Used
 * PHP, 
 * MYSQL, 
 * JavaScript,
